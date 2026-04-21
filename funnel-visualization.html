@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PodPitch Funnel Map — Jean Mundabi Fala</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --or:#059669;
+  --re:#dc2626;--re-l:#fef2f2;--re-b:#fecaca;
+  --am:#d97706;--am-l:#fffbeb;--am-b:#fde68a;
+  --gr:#16a34a;--gr-l:#f0fdf4;--gr-b:#bbf7d0;
+  --bl:#2563eb;--bl-l:#eff6ff;--bl-b:#bfdbfe;
+  --dk:#111827;--g2:#e5e7eb;--g3:#d1d5db;--g4:#9ca3af;--g5:#6b7280;--g6:#374151;
+  --wh:#ffffff;--bg:#f9fafb;
+  --f:'Outfit',system-ui,sans-serif;
+}
+html{font-size:16px;-webkit-font-smoothing:antialiased}
+body{font-family:var(--f);background:var(--bg);color:var(--dk);min-height:100vh}
+
+/* HEADER */
+.hd{background:#052e16;border-bottom:2px solid #064e3b;padding:28px 48px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.hd h1{font-size:1.25rem;font-weight:800;letter-spacing:-.02em;color:#ffffff}
+.hd h1 span{color:#4ade80}
+.hd .by{font-size:.75rem;color:#86efac;margin-top:3px}
+.legend{display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.leg{display:flex;align-items:center;gap:6px;font-size:.72rem;font-weight:600;color:#d1fae5}
+.leg-dot{width:12px;height:12px;border-radius:3px}
+.leg-dot.ex{background:var(--or)}
+.leg-dot.leak{background:var(--re)}
+.leg-dot.miss{background:transparent;border:2px dashed var(--am)}
+.leg-dot.fix{background:var(--gr)}
+
+/* PAGE */
+.page{max-width:960px;margin:0 auto;padding:40px 32px 80px}
+@media(max-width:700px){.page{padding:24px 16px 60px}}
+
+/* SECTION TITLE */
+.sec-title{font-size:.65rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--g4);margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--g2)}
+
+/* FUNNEL STAGE */
+.stage{margin-bottom:0;position:relative}
+
+/* ARROW CONNECTOR */
+.arrow-down{display:flex;flex-direction:column;align-items:center;padding:4px 0;height:36px;justify-content:center}
+.arrow-down .line{width:2px;flex:1;background:var(--g3)}
+.arrow-down .tip{width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:10px solid var(--g3)}
+
+/* STAGE CARD — 3 COLUMN LAYOUT */
+.stage-row{display:grid;grid-template-columns:1fr 2fr 1fr;gap:0;background:var(--wh);border:1.5px solid var(--g2);border-radius:12px;overflow:hidden;min-height:80px}
+@media(max-width:640px){.stage-row{grid-template-columns:1fr}}
+
+.stage-col{padding:18px 20px;display:flex;flex-direction:column;justify-content:center}
+.stage-col.left{border-right:1.5px solid var(--g2);background:var(--re-l)}
+.stage-col.center{background:var(--wh)}
+.stage-col.right{border-left:1.5px solid var(--g2);background:var(--gr-l)}
+
+/* When no leak on left */
+.stage-row.clean .stage-col.left{background:var(--wh)}
+/* When no fix on right */
+.stage-row.no-fix .stage-col.right{background:var(--wh)}
+/* When missing (amber) */
+.stage-row.missing-row .stage-col.left{background:var(--am-l)}
+
+/* COL LABELS */
+.col-label{font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+.col-label.leak-lbl{color:var(--re)}
+.col-label.fix-lbl{color:var(--gr)}
+.col-label.miss-lbl{color:var(--am)}
+.col-label.stage-lbl{color:var(--or)}
+
+/* CENTER CONTENT */
+.stage-name{font-size:1.05rem;font-weight:800;letter-spacing:-.01em;color:var(--dk);margin-bottom:4px}
+.stage-desc{font-size:.8rem;color:var(--g5);line-height:1.5;margin-bottom:0}
+.badge-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:100px;font-size:.62rem;font-weight:700;letter-spacing:.03em}
+.badge.ex{background:rgba(255,89,36,.1);color:var(--or);border:1px solid rgba(255,89,36,.2)}
+.badge.slg{background:var(--bl-l);color:var(--bl);border:1px solid var(--bl-b)}
+.badge.plg{background:var(--gr-l);color:var(--gr);border:1px solid var(--gr-b)}
+.badge.leak{background:var(--re-l);color:var(--re);border:1px solid var(--re-b)}
+.badge.miss{background:var(--am-l);color:var(--am);border:1px solid var(--am-b)}
+
+/* SIDE CONTENT */
+.side-item{font-size:.75rem;color:var(--g6);line-height:1.5;margin-bottom:4px;display:flex;align-items:flex-start;gap:5px}
+.side-item:last-child{margin-bottom:0}
+.side-item .ic{font-size:.7rem;flex-shrink:0;margin-top:1px}
+.side-item.leak-i .ic{color:var(--re)}
+.side-item.fix-i .ic{color:var(--gr)}
+.side-item.miss-i .ic{color:var(--am)}
+
+/* BRANCH */
+.branch-wrap{display:grid;gap:10px;margin-top:0}
+.branch-2{grid-template-columns:1fr 1fr}
+.branch-3{grid-template-columns:1fr 1fr 1fr}
+@media(max-width:600px){.branch-2,.branch-3{grid-template-columns:1fr}}
+.branch-label{font-size:.6rem;font-weight:700;color:var(--g4);text-align:center;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+
+/* BRANCH CARD */
+.bc{background:var(--wh);border:1.5px solid var(--g2);border-radius:10px;padding:16px 18px}
+.bc .bc-label{font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px}
+.bc h3{font-size:.88rem;font-weight:700;color:var(--dk);margin-bottom:4px;line-height:1.3}
+.bc p{font-size:.75rem;color:var(--g5);line-height:1.45;margin-bottom:0}
+.bc.slg-bc{border-color:var(--bl-b);background:var(--bl-l)}
+.bc.slg-bc .bc-label{color:var(--bl)}
+.bc.plg-bc{border-color:var(--gr-b);background:var(--gr-l)}
+.bc.plg-bc .bc-label{color:var(--gr)}
+.bc.leak-bc{border-color:var(--re-b);background:var(--re-l)}
+.bc.leak-bc .bc-label{color:var(--re)}
+.bc.miss-bc{border-color:var(--am-b);background:var(--am-l);border-style:dashed}
+.bc.miss-bc .bc-label{color:var(--am)}
+
+/* SCORE GRID */
+.score-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.score-box{padding:10px;border-radius:8px;text-align:center}
+.score-box .sn{font-size:1.4rem;font-weight:900;line-height:1;margin-bottom:3px}
+.score-box .sl{font-size:.65rem;color:var(--g5);line-height:1.3}
+.score-box.hi{background:var(--gr-l);border:1.5px solid var(--gr-b)}.score-box.hi .sn{color:var(--gr)}
+.score-box.md{background:var(--am-l);border:1.5px solid var(--am-b)}.score-box.md .sn{color:var(--am)}
+.score-box.lo{background:var(--re-l);border:1.5px solid var(--re-b)}.score-box.lo .sn{color:var(--re)}
+
+/* SEQ CHIPS */
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:6px;font-size:.65rem;font-weight:600;border:1px solid var(--g2);background:var(--bg);color:var(--g5)}
+.chip .cn{font-weight:800;color:var(--dk)}
+.chip.c-leak{border-color:var(--re-b);background:var(--re-l);color:var(--re)}.chip.c-leak .cn{color:var(--re)}
+.chip.c-miss{border-color:var(--am-b);background:var(--am-l);color:var(--am)}.chip.c-miss .cn{color:var(--am)}
+.chip.c-fix{border-color:var(--gr-b);background:var(--gr-l);color:var(--gr)}.chip.c-fix .cn{color:var(--gr)}
+.chip.c-ex{border-color:rgba(255,89,36,.2);background:rgba(255,89,36,.05);color:var(--or)}.chip.c-ex .cn{color:var(--or)}
+
+/* SPACER */
+.sp12{height:12px}
+.sp24{height:24px}
+
+/* EMAIL AUDIT HIGHLIGHT */
+.audit-callout{background:#fff7ed;border:2px solid #fed7aa;border-radius:10px;padding:16px 20px;margin-top:10px}
+.audit-callout .ac-label{font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--or);margin-bottom:6px}
+.audit-callout h4{font-size:.88rem;font-weight:700;color:var(--dk);margin-bottom:8px}
+.audit-item{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px;font-size:.75rem;color:var(--g6);line-height:1.45}
+.audit-item:last-child{margin-bottom:0}
+.audit-item .num{width:18px;height:18px;border-radius:4px;background:var(--or);color:var(--wh);display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;flex-shrink:0;margin-top:1px}
+
+/* EMAIL PANEL */
+.email-toggle{width:100%;background:var(--wh);border:1.5px solid var(--g2);border-top:0;border-radius:0 0 12px 12px;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-size:.75rem;font-weight:600;color:var(--g5);transition:background .15s}
+.email-toggle:hover{background:#f3f4f6}
+.email-toggle .et-left{display:flex;align-items:center;gap:8px}
+.email-toggle .et-icon{width:20px;height:20px;border-radius:5px;background:var(--or);display:flex;align-items:center;justify-content:center;font-size:.65rem;color:var(--wh)}
+.email-toggle .et-arr{font-size:.7rem;color:var(--g4);transition:transform .2s}
+.email-toggle.open .et-arr{transform:rotate(180deg)}
+.email-panel{display:none;padding:0 0 0 0}
+.email-panel.open{display:block}
+.email-panel-inner{background:#f1f3f5;border:1.5px solid var(--g2);border-top:0;border-radius:0 0 12px 12px;padding:16px;display:flex;flex-direction:column;gap:12px}
+
+/* EMAIL CARD */
+.ec{background:var(--wh);border:1.5px solid var(--g2);border-radius:10px;overflow:hidden;transition:box-shadow .15s}
+.ec:hover{box-shadow:0 4px 16px rgba(0,0,0,.06)}
+.ec-head{padding:14px 18px 10px;border-bottom:1px solid var(--g2);display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.ec-meta{flex:1}
+.ec-seq{font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
+.ec-seq.s-rewrite{color:var(--or)}
+.ec-seq.s-new{color:var(--am)}
+.ec-seq.s-missing{color:var(--re)}
+.ec-from{font-size:.72rem;color:var(--g4);margin-bottom:3px}
+.ec-from strong{color:var(--g6);font-weight:600}
+.ec-subject{font-size:.9rem;font-weight:700;color:var(--dk);line-height:1.3}
+.ec-badge{flex-shrink:0;padding:3px 8px;border-radius:4px;font-size:.58rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;align-self:flex-start;margin-top:2px}
+.ec-badge.rewrite{background:rgba(255,89,36,.1);color:var(--or);border:1px solid rgba(255,89,36,.2)}
+.ec-badge.new-e{background:var(--am-l);color:var(--am);border:1px solid var(--am-b)}
+.ec-body{padding:14px 18px;font-size:.82rem;line-height:1.7;color:var(--g6);white-space:pre-wrap}
+.ec-body .ph{background:#fef3c7;border-radius:3px;padding:0 4px;font-size:.75rem;font-weight:600;color:#92400e;white-space:nowrap}
+.ec-why{padding:10px 18px 14px;border-top:1px solid var(--g2);font-size:.72rem;color:var(--g5);background:#fafafa;display:flex;gap:8px;align-items:flex-start}
+.ec-why .why-icon{color:var(--gr);font-size:.8rem;flex-shrink:0;margin-top:1px}
+
+footer{padding:20px 48px;border-top:1px solid var(--g2);font-size:.72rem;color:var(--g4);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;background:var(--wh)}
+footer a{color:var(--or)}
+</style>
+</head>
+<body>
+
+<div class="hd">
+  <div>
+    <h1>PodPitch <span>Funnel Map</span></h1>
+    <div class="by">Audit by Jean Mundabi Fala — Growth Lead Candidate</div>
+  </div>
+  <div class="legend">
+    <div class="leg"><div class="leg-dot ex"></div>Exists</div>
+    <div class="leg"><div class="leg-dot leak"></div>Leaking</div>
+    <div class="leg"><div class="leg-dot miss"></div>Missing</div>
+    <div class="leg"><div class="leg-dot fix"></div>What to Build</div>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- TRAFFIC -->
+  <div class="sec-title">Top of Funnel</div>
+  <div class="stage-row clean no-fix">
+    <div class="stage-col left">
+    </div>
+    <div class="stage-col center">
+      <div class="col-label stage-lbl">Traffic</div>
+      <div class="stage-name">Meta Ads</div>
+      <div class="stage-desc">$100K+/mo. Primary acquisition channel. Parker runs it solo.</div>
+      <div class="badge-row">
+        <span class="badge ex">Active</span>
+        <span class="badge ex">$100K+/mo</span>
+      </div>
+    </div>
+    <div class="stage-col right" style="background:var(--wh)">
+    </div>
+  </div>
+
+  <div class="arrow-down"><div class="line"></div><div class="tip"></div></div>
+
+  <!-- LANDING PAGE LEAK -->
+  <div class="stage-row">
+    <div class="stage-col left">
+      <div class="col-label leak-lbl">Leak</div>
+      <div class="side-item leak-i"><span class="ic">✕</span>One page serves all 3 segments</div>
+      <div class="side-item leak-i"><span class="ic">✕</span>Agency founder + solo founder — same CTA</div>
+      <div class="side-item leak-i"><span class="ic">✕</span>No qualification before booking</div>
+    </div>
+    <div class="stage-col center">
+      <div class="col-label stage-lbl">Landing Page</div>
+      <div class="stage-name">One Generic Page</div>
+      <div class="stage-desc">Trial CTA + Demo CTA side by side. Decision paralysis.</div>
+      <div class="badge-row">
+        <span class="badge ex">Exists</span>
+        <span class="badge leak">Dual CTA Confusion</span>
+      </div>
+    </div>
+    <div class="stage-col right">
+      <div class="col-label fix-lbl">What to Build</div>
+      <div class="side-item fix-i"><span class="ic">→</span>/agencies — demo CTA, agency proof</div>
+      <div class="side-item fix-i"><span class="ic">→</span>/try — trial CTA, no demo popup</div>
+      <div class="side-item fix-i"><span class="ic">→</span>2-field qual gate before Cal.com embed</div>
+    </div>
+  </div>
+
+  <div class="arrow-down"><div class="line"></div><div class="tip"></div></div>
+
+  <!-- LEAD SCORING -->
+  <div class="stage-row clean">
+    <div class="stage-col left" style="background:var(--wh)">
+    </div>
+    <div class="stage-col center">
+      <div class="col-label stage-lbl">Application + Lead Score</div>
+      <div class="stage-name">Typeform Qualifier</div>
+      <div class="stage-desc">Income + investment questions. Scores every applicant.</div>
+      <div class="score-grid">
+        <div class="score-box hi"><div class="sn">4+</div><div class="sl">Book with Parker</div></div>
+        <div class="score-box md"><div class="sn">3</div><div class="sl">Book with Lazar</div></div>
+        <div class="score-box lo"><div class="sn">1–2</div><div class="sl">Rejected — no nurture</div></div>
+      </div>
+    </div>
+    <div class="stage-col right">
+      <div class="col-label miss-lbl">Missing</div>
+      <div class="side-item miss-i"><span class="ic">○</span>Score 1–2 get nothing — recoverable later</div>
+      <div class="side-item miss-i"><span class="ic">○</span>Full abandon (score 4+, no slot booked) = hottest lead. Currently lost.</div>
+    </div>
+  </div>
+
+  <!-- APPLICATION ABANDONS -->
+  <div class="sp12"></div>
+  <div class="branch-label">Application Abandons</div>
+  <div class="branch-wrap branch-2">
+    <div class="bc miss-bc">
+      <div class="bc-label">Partial Abandon — Missing</div>
+      <h3>Filled contact info. Didn't finish.</h3>
+      <p>Has email. No application completed.</p>
+      <div class="chips">
+        <div class="chip c-miss"><span class="cn">10</span> re-engagement emails</div>
+        <div class="chip c-miss">Back to VSL</div>
+      </div>
+    </div>
+    <div class="bc leak-bc">
+      <div class="bc-label">Full Abandon — Priority Leak</div>
+      <h3>Score 4+. Completed app. No slot booked.</h3>
+      <p>Hottest lead in the funnel. Currently lost.</p>
+      <div class="chips">
+        <div class="chip c-leak">Lazar calls immediately</div>
+        <div class="chip c-miss"><span class="cn">10</span> priority sequence</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow-down"><div class="line"></div><div class="tip"></div></div>
+
+  <!-- PRE-CALL — EMAIL AUDIT STAGE -->
+  <div class="stage-row">
+    <div class="stage-col left">
+      <div class="col-label leak-lbl">Confirmed Leaks</div>
+      <div class="side-item leak-i"><span class="ic">✕</span>Confirmation email leads with a threat</div>
+      <div class="side-item leak-i"><span class="ic">✕</span>Homework form — prospect does SDR's job</div>
+      <div class="side-item leak-i"><span class="ic">✕</span>No 24hr reminder exists</div>
+    </div>
+    <div class="stage-col center">
+      <div class="col-label stage-lbl">Post-Booking — Pre-Call</div>
+      <div class="stage-name">Booking Confirmed</div>
+      <div class="stage-desc">Between "demo booked" and "demo attended." Highest-leverage window. Currently broken.</div>
+      <div class="audit-callout">
+        <div class="ac-label">Email Audit Finding</div>
+        <h4>What the sequence does right now</h4>
+        <div class="audit-item"><div class="num">1</div>"People who miss the call are not eligible to sign up." — Loss frame. Warm lead goes cold.</div>
+        <div class="audit-item"><div class="num">2</div>Google Form asks prospect to paste their own bio. SDR goes in blind.</div>
+        <div class="audit-item"><div class="num">3</div>24hr reminder: does not exist. Prospect booked 5 days ago. Nobody re-confirmed intent.</div>
+      </div>
+    </div>
+    <div class="stage-col right">
+      <div class="col-label fix-lbl">What to Build</div>
+      <div class="side-item fix-i"><span class="ic">→</span>Clay enrichment on email capture</div>
+      <div class="side-item fix-i"><span class="ic">→</span>Segment-specific confirmation email</div>
+      <div class="side-item fix-i"><span class="ic">→</span>24hr reminder with specific outcome promise</div>
+      <div class="side-item fix-i"><span class="ic">→</span>SDR brief auto-sent before call</div>
+      <div class="chips" style="margin-top:10px">
+        <div class="chip c-ex">1 confirmation</div>
+        <div class="chip c-miss">+1 24hr reminder</div>
+        <div class="chip c-miss">3 pre-call emails</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRE-CALL EMAIL TOGGLE -->
+  <button class="email-toggle" onclick="toggleEmails('precall',this)">
+    <div class="et-left"><div class="et-icon">✉</div>View pre-call emails — 2 rewrites (Confirmation + 24hr Reminder)</div>
+    <span class="et-arr">▾</span>
+  </button>
+  <div class="email-panel" id="precall">
+  <div class="email-panel-inner">
+
+    <!-- EMAIL 1: CONFIRMATION REWRITE -->
+    <div class="ec">
+      <div class="ec-head">
+        <div class="ec-meta">
+          <div class="ec-seq s-rewrite">Email 1 of 2 · Sent immediately after booking</div>
+          <div class="ec-from">From: <strong>Lazar Gudovic &lt;lazar@podpitch.com&gt;</strong></div>
+          <div class="ec-subject">Your demo Monday — here's what we'll cover, <span style="color:var(--or)">[Name]</span></div>
+        </div>
+        <span class="ec-badge rewrite">Rewrite</span>
+      </div>
+      <div class="ec-body">Hey <span class="ph">[Name]</span>,
+
+Looking forward to Monday.
+
+I had a look at what you're building before our call. Based on that, I'll focus on how <span class="ph">[agencies like yours / founders in your space]</span> are getting booked on <span class="ph">[relevant podcast type]</span> right now — and what their first 30 days of results look like.
+
+You don't need to prepare anything. Just show up.
+
+If something comes up, reschedule here: <span class="ph">[link]</span>. No problem.
+
+See you Monday.
+Lazar</div>
+      <div class="ec-why"><span class="why-icon">✓</span>Replaces the threat ("not eligible to sign up"). Signals research was done. Removes all prep friction. Reschedule link is low-pressure, not punitive.</div>
+    </div>
+
+    <!-- EMAIL 2: 24HR REMINDER (NEW) -->
+    <div class="ec">
+      <div class="ec-head">
+        <div class="ec-meta">
+          <div class="ec-seq s-new">Email 2 of 3 · Sent 24 hours before the call · CURRENTLY MISSING</div>
+          <div class="ec-from">From: <strong>Lazar Gudovic &lt;lazar@podpitch.com&gt;</strong></div>
+          <div class="ec-subject">Tomorrow at <span style="color:var(--am)">[time]</span> — one thing to know first</div>
+        </div>
+        <span class="ec-badge new-e">New Email</span>
+      </div>
+      <div class="ec-body">Hey <span class="ph">[Name]</span>,
+
+Quick note before tomorrow.
+
+<span class="ph">[Founders / agencies]</span> in your position get the most out of the demo when we focus on one thing: the first 10 podcast interviews. Not a full strategy — just the first 10.
+
+That's what we'll build together tomorrow in real time. By the end of the call you'll have a list, a pitch angle, and a realistic timeline.
+
+See you at <span class="ph">[time]</span>.
+Lazar
+
+P.S. Here's 90 seconds from <span class="ph">[similar user]</span> on what their first 30 days looked like: <span class="ph">[link]</span></div>
+      <div class="ec-why"><span class="why-icon">✓</span>This email does not exist today. A prospect who booked 5 days ago and gone cold receives nothing before the call. This re-confirms intent and creates anticipation for a specific outcome.</div>
+    </div>
+
+    <!-- EMAIL 3: 2HR BEFORE CALL (NEW) -->
+    <div class="ec">
+      <div class="ec-head">
+        <div class="ec-meta">
+          <div class="ec-seq s-new">Email 3 of 3 · Sent 2 hours before the call · CURRENTLY MISSING</div>
+          <div class="ec-from">From: <strong>Lazar Gudovic &lt;lazar@podpitch.com&gt;</strong></div>
+          <div class="ec-subject">Before our call — one page worth bookmarking, <span style="color:var(--or)">[Name]</span></div>
+        </div>
+        <span class="ec-badge new-e">New Email</span>
+      </div>
+      <div class="ec-body">Hey <span class="ph">[Name]</span>,
+
+Quick one before we speak.
+
+I put together a page with the questions I get most on these calls — and a few people who were in your exact position 60 days ago.
+
+Worth a look before we talk: <span class="ph">[thank you page link — duplicate, no pixel]</span>
+
+See you in 2 hours.
+Lazar</div>
+      <div class="ec-why"><span class="why-icon">✓</span>Surfaces the Thank You page content before the call — FAQ videos and case studies. Prospects who consume this arrive warm, with objections pre-answered. Show rate and close rate both improve. The link points to the pixel-safe duplicate page so Meta doesn't re-tag them as a fresh lead.</div>
+    </div>
+
+  </div>
+  </div>
+
+  <!-- POST-BOOKING CONTENT CONSUMPTION STAGE -->
+  <div class="stage-row missing-row">
+    <div class="stage-col left">
+      <div class="col-label miss-lbl">Missing Entirely</div>
+      <div class="side-item miss-i"><span class="ic">○</span>No Thank You page — prospects book and land nowhere</div>
+      <div class="side-item miss-i"><span class="ic">○</span>No retargeting layer for booked leads</div>
+      <div class="side-item miss-i"><span class="ic">○</span>No duplicate TY page (pixel-safe version)</div>
+    </div>
+    <div class="stage-col center">
+      <div class="col-label stage-lbl">Post-Booking — Content Consumption</div>
+      <div class="stage-name">What Happens After They Book</div>
+      <div class="stage-desc">The window between booking and call is where show rate and close rate are won or lost. Right now this window is empty.</div>
+      <div class="badge-row">
+        <span class="badge miss">Not Built</span>
+      </div>
+    </div>
+    <div class="stage-col right">
+      <div class="col-label fix-lbl">What to Build</div>
+      <div class="side-item fix-i"><span class="ic">→</span>Thank You page: 10 Parker FAQ videos + 20+ case studies</div>
+      <div class="side-item fix-i"><span class="ic">→</span>Duplicate TY page — no Facebook pixel (prevents re-triggering booked segment)</div>
+      <div class="side-item fix-i"><span class="ic">→</span>Retargeting: upload videos to Meta/Instagram, serve only to booked leads</div>
+      <div class="side-item fix-i"><span class="ic">→</span>3 pre-call emails point to TY content (not YouTube)</div>
+    </div>
+  </div>
+
+  <div class="arrow-down"><div class="line"></div><div class="tip"></div></div>
+
+  <!-- CALL DAY — SPLIT -->
+  <div class="stage-row clean no-fix">
+    <div class="stage-col left" style="background:var(--wh)"></div>
+    <div class="stage-col center">
+      <div class="col-label stage-lbl">Call Day</div>
+      <div class="stage-name">Demo with Lazar or Parker</div>
+      <div class="stage-desc">Show → Parker closes. No-show → recovery sequence triggers.</div>
+      <div class="badge-row">
+        <span class="badge slg">SLG Active</span>
+      </div>
+    </div>
+    <div class="stage-col right" style="background:var(--wh)"></div>
+  </div>
+
+  <!-- NO-SHOW BRANCH -->
+  <div class="sp12"></div>
+  <div class="branch-label">Call Outcome</div>
+  <div class="branch-wrap branch-2">
+    <div class="bc leak-bc">
+      <div class="bc-label">No-Show — Leaking</div>
+      <h3>10-email sequence. 3 written. 7 still to build.</h3>
+      <p>Current 3 emails: generic stat dump. No personalisation. Same to everyone.</p>
+      <div class="chips">
+        <div class="chip c-leak"><span class="cn">3</span> generic stat emails — rewritten below</div>
+      </div>
+      <div class="chips" style="margin-top:4px">
+        <div class="chip c-miss"><span class="cn">7</span> emails still to build</div>
+      </div>
+    </div>
+    <div class="bc slg-bc">
+      <div class="bc-label">Show — Active</div>
+      <h3>Parker closes. Post-call sequence runs.</h3>
+      <p>Sales assets + broadcast emails continue.</p>
+      <div class="chips">
+        <div class="chip c-ex"><span class="cn">10</span> post-call emails</div>
+        <div class="chip c-ex"><span class="cn">5/wk</span> broadcasts</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NO-SHOW EMAIL TOGGLE -->
+  <button class="email-toggle" onclick="toggleEmails('noshow',this)">
+    <div class="et-left"><div class="et-icon">✉</div>View no-show recovery emails — 3 rewritten · 7 to build (10-email sequence)</div>
+    <span class="et-arr">▾</span>
+  </button>
+  <div class="email-panel" id="noshow">
+  <div class="email-panel-inner">
+
+    <!-- NO-SHOW EMAIL 1 -->
+    <div class="ec">
+      <div class="ec-head">
+        <div class="ec-meta">
+          <div class="ec-seq s-rewrite">Email 1 of 3 · Sent same day, 30 min after missed call</div>
+          <div class="ec-from">From: <strong>Lazar Gudovic &lt;lazar@podpitch.com&gt;</strong></div>
+          <div class="ec-subject">Missed you today, <span style="color:var(--or)">[Name]</span></div>
+        </div>
+        <span class="ec-badge rewrite">Rewrite</span>
+      </div>
+      <div class="ec-body">Hey <span class="ph">[Name]</span>,
+
+Something came up — happens to everyone.
+
+Before our call I looked at <span class="ph">[their company / LinkedIn]</span>. You're at the stage where <span class="ph">[specific observation — e.g. "you're building your brand as a founder but your podcast presence hasn't caught up yet"]</span>. That's usually where PodPitch creates the most obvious before/after.
+
+Worth rescheduling?
+
+<span class="ph">[Reschedule link]</span>
+
+Lazar</div>
+      <div class="ec-why"><span class="why-icon">✓</span>Replaces the generic stat dump ("users save 13+ hours weekly"). One observation about their actual situation. One CTA. Proves research was done — gives the prospect a reason to believe the next demo is worth attending.</div>
+    </div>
+
+    <!-- NO-SHOW EMAIL 2 -->
+    <div class="ec">
+      <div class="ec-head">
+        <div class="ec-meta">
+          <div class="ec-seq s-rewrite">Email 2 of 3 · Sent next day</div>
+          <div class="ec-from">From: <strong>Lazar Gudovic &lt;lazar@podpitch.com&gt;</strong></div>
+          <div class="ec-subject">One thing I noticed, <span style="color:var(--or)">[Name]</span></div>
+        </div>
+        <span class="ec-badge rewrite">Rewrite</span>
+      </div>
+      <div class="ec-body">Hey <span class="ph">[Name]</span>,
+
+I checked <span class="ph">[their LinkedIn / company]</span> while prepping for our call.
+
+<span class="ph">[Specific finding — e.g. "You've published consistently on LinkedIn but there's no podcast presence. That's where the biggest distribution gap usually is."]</span>
+
+That's the gap <span class="ph">[similar user]</span> closed in 6 weeks — went from 0 to 7 confirmed bookings.
+
+If that gap is real for you: <span class="ph">[reschedule link]</span>
+
+Lazar</div>
+      <div class="ec-why"><span class="why-icon">✓</span>Replaces the feature list ("Build targeted podcast lists in under 2 mins"). Leads with a specific finding from their situation. Uses a real before/after from a similar user. The conditional CTA creates higher-quality replies.</div>
+    </div>
+
+    <!-- NO-SHOW EMAIL 3 -->
+    <div class="ec">
+      <div class="ec-head">
+        <div class="ec-meta">
+          <div class="ec-seq s-rewrite">Email 3 of 3 · Sent 4 days later</div>
+          <div class="ec-from">From: <strong>Lazar Gudovic &lt;lazar@podpitch.com&gt;</strong></div>
+          <div class="ec-subject">Lower-friction option, <span style="color:var(--or)">[Name]</span></div>
+        </div>
+        <span class="ec-badge rewrite">Rewrite</span>
+      </div>
+      <div class="ec-body">Hey <span class="ph">[Name]</span>,
+
+If scheduling a call is the blocker — no problem.
+
+You can start a 2-week trial now and explore at your own pace: <span class="ph">[trial link]</span>
+
+If you'd still prefer the demo first, the calendar's open: <span class="ph">[reschedule link]</span>
+
+Either works.
+
+Lazar</div>
+      <div class="ec-why"><span class="why-icon">✓</span>Replaces the third consecutive stat email ("users save 10-30 hours a week"). Offers a lower-friction alternative. Prospects who skip the demo and start the trial still enter the conversion funnel.</div>
+    </div>
+
+    <!-- EMAILS 4–10: TO BUILD -->
+    <div class="ec" style="border-color:var(--am-b);background:var(--am-l)">
+      <div class="ec-head" style="border-color:var(--am-b)">
+        <div class="ec-meta">
+          <div class="ec-seq s-new">Emails 4–10 · Sent over days 6–21 · TO BUILD</div>
+          <div class="ec-from">From: <strong>Lazar Gudovic &lt;lazar@podpitch.com&gt;</strong></div>
+          <div class="ec-subject">Escalating personalisation + social proof sequence</div>
+        </div>
+        <span class="ec-badge new-e">To Build</span>
+      </div>
+      <div class="ec-body" style="color:var(--am)">These 7 emails follow the same pattern:
+
+Email 4: A second specific observation — different angle from email 2
+Email 5: A case study from someone who no-showed twice before converting
+Email 6: A "what changed for them" story — outcome-led, no features
+Email 7: Direct question — "Is podcast growth still on your radar this quarter?"
+Email 8: A piece of content (clip, article) relevant to their specific situation
+Email 9: Social proof from someone in their exact segment (agency / founder / in-house)
+Email 10: Final breakup — "No hard feelings. Trial stays open: <span class="ph">[link]</span>"
+
+Each pulls from the Clay enrichment data captured at booking.</div>
+      <div class="ec-why" style="background:rgba(217,119,6,.06);border-color:var(--am-b)"><span class="why-icon" style="color:var(--am)">○</span>Pattern: each email escalates specificity. By email 10, the prospect has received 10 personalised touchpoints referencing their actual situation — not a single generic stat.</div>
+    </div>
+
+  </div>
+  </div>
+
+  <!-- POST-SHOW STAGE -->
+  <div class="stage-row clean">
+    <div class="stage-col left" style="background:var(--wh)"></div>
+    <div class="stage-col center">
+      <div class="col-label stage-lbl">Post-Show — Sales Assets</div>
+      <div class="stage-name">They Showed Up. Now Close Them.</div>
+      <div class="stage-desc">10-email sequence answers the most common objections after the call. Broadcast emails run in parallel for everyone on the list — no-shows, shows, and unconverted leads alike.</div>
+      <div class="badge-row">
+        <span class="badge ex">Exists</span>
+        <span class="badge slg">SLG</span>
+      </div>
+      <div class="chips" style="margin-top:8px">
+        <div class="chip c-ex"><span class="cn">10</span> post-show sales asset emails</div>
+        <div class="chip c-ex"><span class="cn">5/wk</span> broadcast emails — all subscribers</div>
+      </div>
+    </div>
+    <div class="stage-col right">
+      <div class="col-label stage-lbl">Broadcast Note</div>
+      <div class="side-item" style="color:var(--g5)"><span class="ic" style="color:var(--or)">→</span>Broadcasts go to everyone: no-shows, shows, unconverted</div>
+      <div class="side-item" style="color:var(--g5)"><span class="ic" style="color:var(--or)">→</span>5 unique emails per week written by Parker</div>
+      <div class="side-item" style="color:var(--g5)"><span class="ic" style="color:var(--or)">→</span>Direct to VSL (rebook) or case study content</div>
+    </div>
+  </div>
+
+  <!-- POST-SHOW EMAIL TOGGLE -->
+  <button class="email-toggle" onclick="toggleEmails('postshow',this)">
+    <div class="et-left"><div class="et-icon">✉</div>View post-show structure — sales asset email + broadcast cadence</div>
+    <span class="et-arr">▾</span>
+  </button>
+  <div class="email-panel" id="postshow">
+  <div class="email-panel-inner">
+
+    <!-- SALES ASSET EMAIL (REPRESENTATIVE) -->
+    <div class="ec">
+      <div class="ec-head">
+        <div class="ec-meta">
+          <div class="ec-seq s-rewrite">Email 1 of 10 · Sent same day as call · Sales Asset</div>
+          <div class="ec-from">From: <strong>Lazar Gudovic &lt;lazar@podpitch.com&gt;</strong></div>
+          <div class="ec-subject">The question you didn't ask, <span style="color:var(--or)">[Name]</span></div>
+        </div>
+        <span class="ec-badge rewrite">Sales Asset</span>
+      </div>
+      <div class="ec-body">Hey <span class="ph">[Name]</span>,
+
+Great speaking today.
+
+There's one thing most people don't ask on the call but always think about after: "What happens if I pitch 20 podcasts and only 2 say yes?"
+
+Short answer: that's a good result. Most of our users start there.
+
+<span class="ph">[Link to case study — founder who started at 2/20 and hit 8/20 by month 3]</span>
+
+The difference was the pitch angle, not the outreach volume.
+
+That's what we'd set up for you on day one.
+
+Lazar</div>
+      <div class="ec-why"><span class="why-icon">✓</span>Addresses a common post-call objection before it becomes a reason not to buy. Each of the 10 emails covers a different objection: ROI, time investment, pitch quality, agency pricing, trial risk, etc.</div>
+    </div>
+
+    <!-- BROADCAST EMAIL (REPRESENTATIVE) -->
+    <div class="ec">
+      <div class="ec-head">
+        <div class="ec-meta">
+          <div class="ec-seq" style="color:var(--bl)">Broadcast · Ongoing · Sent to all subscribers 5x per week</div>
+          <div class="ec-from">From: <strong>Parker Olson &lt;parker@podpitch.com&gt;</strong></div>
+          <div class="ec-subject">How <span style="color:var(--or)">[Name]</span> got booked on 3 shows in 10 days</div>
+        </div>
+        <span class="ec-badge" style="background:var(--bl-l);color:var(--bl);border-color:var(--bl-b)">Broadcast</span>
+      </div>
+      <div class="ec-body">Parker writes 5 unique broadcast emails per week.
+
+Each goes to everyone on the list — no-shows, post-call unconverted, trial users, past customers.
+
+Format rotates:
+→ Case study (real user result, specific numbers)
+→ Insight (one thing most people get wrong about podcast pitching)
+→ Social proof (screenshot, quote, booking confirmation)
+→ VSL rebook CTA (for no-shows still in the funnel)
+→ Content (YouTube clip, article, tip)
+
+Purpose: keep PodPitch top of mind until the prospect is ready to buy. Most SaaS purchases happen on the 5th to 12th touchpoint.</div>
+      <div class="ec-why"><span class="why-icon">✓</span>The broadcast layer means no prospect is ever truly lost. They stay on the list receiving fresh content until they buy, unsubscribe, or start a trial. This is the compounding asset that makes the whole funnel work at scale.</div>
+    </div>
+
+  </div>
+  </div>
+
+  <div class="arrow-down"><div class="line"></div><div class="tip"></div></div>
+
+  <!-- PLG PATH -->
+  <div class="stage-row missing-row no-fix">
+    <div class="stage-col left">
+      <div class="col-label miss-lbl">Missing Entirely</div>
+      <div class="side-item miss-i"><span class="ic">○</span>No trial onboarding sequence</div>
+      <div class="side-item miss-i"><span class="ic">○</span>No activation triggers in Klaviyo</div>
+      <div class="side-item miss-i"><span class="ic">○</span>No trial-to-paid conversion emails</div>
+      <div class="side-item miss-i"><span class="ic">○</span>No sales-assisted handoff at day 14</div>
+    </div>
+    <div class="stage-col center">
+      <div class="col-label stage-lbl">PLG Path — New</div>
+      <div class="stage-name">2-Week Self-Serve Trial</div>
+      <div class="stage-desc">Parker knows there's a huge opportunity here. No lifecycle exists yet. This is the 20% Klaviyo work in the JD.</div>
+      <div class="badge-row">
+        <span class="badge miss">Not Built</span>
+        <span class="badge plg">PLG</span>
+      </div>
+      <div class="chips" style="margin-top:8px">
+        <div class="chip c-miss"><span class="cn">7</span> onboarding + activation</div>
+        <div class="chip c-miss"><span class="cn">5</span> trial-to-paid</div>
+        <div class="chip c-miss"><span class="cn">5</span> win-back</div>
+      </div>
+    </div>
+    <div class="stage-col right" style="background:var(--wh)"></div>
+  </div>
+
+  <div class="sp24"></div>
+
+  <!-- LEAD MAGNET -->
+  <div class="sec-title">Lead Magnet — Agency Acquisition</div>
+  <div class="stage-row clean">
+    <div class="stage-col left" style="background:var(--wh)"></div>
+    <div class="stage-col center">
+      <div class="col-label stage-lbl">Built — PvP Scorecard</div>
+      <div class="stage-name">Podcast Pitch Readiness Quiz</div>
+      <div class="stage-desc">8 questions. Score their client's podcast readiness. Email capture. Agency segment only.</div>
+      <div class="badge-row">
+        <span class="badge ex">Built</span>
+        <span class="badge slg">Agency Path</span>
+      </div>
+    </div>
+    <div class="stage-col right">
+      <div class="col-label fix-lbl">Connects To</div>
+      <div class="side-item fix-i"><span class="ic">→</span>Dedicated agency nurture sequence</div>
+      <div class="side-item fix-i"><span class="ic">→</span>Demo booking CTA</div>
+      <div class="side-item fix-i"><span class="ic">→</span>Each agency = potential 10+ client profiles</div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span>Funnel map by <a href="mailto:jeanmundabi@gmail.com">Jean Mundabi Fala</a> — AI-Native Growth Lead Candidate · PodPitch</span>
+  <span>Pair with: Post-Booking Sequence Rewrite · Agency Landing Page · PvP Scorecard</span>
+</footer>
+
+<script>
+function toggleEmails(id, btn) {
+  const panel = document.getElementById(id);
+  const isOpen = panel.classList.contains('open');
+  panel.classList.toggle('open', !isOpen);
+  btn.classList.toggle('open', !isOpen);
+}
+</script>
+</body>
+</html>

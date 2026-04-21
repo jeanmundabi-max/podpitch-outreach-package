@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parker's Special Package — MDB Growth Capital</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--or:#FF5924;--or-h:#e84d1e;--ne:#e7ff5a;--ne-d:rgba(231,255,90,.1);
+--dk:#222b27;--dk-s:#2a3530;--wh:#fff;--of:#f9fafb;--lt:#f3f4f6;
+--g3:#d1d5db;--g4:#9ca3af;--g5:#6b7280;--g6:#4b5563;
+--red:#ef4444;--grn:#22c55e;--amb:#f59e0b;
+--f:'Outfit',system-ui,sans-serif;--mx:880px;
+}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;font-size:20px}
+body{font-family:var(--f);color:var(--dk);line-height:1.65;background:var(--wh);overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+.rv{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease}
+.rv.on{opacity:1;transform:none}
+.d1{transition-delay:.07s}.d2{transition-delay:.14s}.d3{transition-delay:.21s}
+
+/* Side Nav */
+.sn{position:fixed;left:16px;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:8px}
+.sn a{width:8px;height:8px;border-radius:50%;background:var(--g3);display:block;transition:all .25s;position:relative}
+.sn a.ac{background:var(--or);transform:scale(1.5)}
+.sn a::after{content:attr(data-t);position:absolute;left:18px;top:50%;transform:translateY(-50%);font-size:.6rem;color:var(--g5);white-space:nowrap;opacity:0;transition:opacity .15s;pointer-events:none;font-weight:500}
+.sn a:hover::after{opacity:1}
+@media(max-width:900px){.sn{display:none}}
+
+/* Layout */
+.w{max-width:var(--mx);margin:0 auto;padding:0 24px}
+section{padding:80px 0}
+@media(max-width:640px){section{padding:56px 0}.w{padding:0 16px}}
+.dark{background:var(--dk);color:var(--wh)}
+.dark h1,.dark h2,.dark h3,.dark p,.dark li,.dark td,.dark th,.dark strong{color:var(--wh)}
+.alt{background:var(--of)}
+
+/* Typography */
+h1{font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800;line-height:1.08;letter-spacing:-.03em;margin-bottom:16px}
+h2{font-size:clamp(1.3rem,3vw,1.8rem);font-weight:700;line-height:1.12;letter-spacing:-.02em;margin-bottom:12px}
+h3{font-size:1rem;font-weight:700;margin-bottom:8px}
+p{margin-bottom:14px;font-size:.95rem}
+.label{font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--or);margin-bottom:6px}
+.dark .label{color:var(--ne)}
+.sub{color:var(--g5);font-size:.92rem;line-height:1.6}
+.dark .sub{color:var(--g4)}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 26px;border-radius:8px;font:600 .88rem/1 var(--f);border:0;cursor:pointer;transition:all .15s}
+.btn:active{transform:scale(.97)}
+.b-or{background:var(--or);color:var(--wh)}.b-or:hover{background:var(--or-h)}
+.b-ne{background:var(--ne);color:var(--dk);font-weight:700}.b-ne:hover{background:#d4f040}
+.b-gh{background:transparent;color:var(--wh);border:1.5px solid rgba(255,255,255,.2)}.b-gh:hover{border-color:rgba(255,255,255,.5)}
+
+/* Top Banner */
+.tb{background:var(--dk);color:var(--g4);text-align:center;padding:10px 16px;font-size:.7rem;font-weight:500;border-bottom:1px solid rgba(255,255,255,.06)}
+.tb strong{color:var(--ne)}
+
+/* Hero */
+.hero{min-height:90vh;display:flex;align-items:center;padding-top:40px;padding-bottom:60px}
+.hero h1{font-size:clamp(2rem,5vw,3rem)}
+.hero h1 em{font-style:normal;color:var(--or)}
+.vid-box{width:100%;aspect-ratio:16/9;background:var(--dk-s);border:1px solid rgba(255,255,255,.08);border-radius:12px;display:flex;align-items:center;justify-content:center;margin:24px 0;cursor:pointer;position:relative;overflow:hidden}
+.vid-box::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at center,rgba(231,255,90,.03),transparent 60%)}
+.pb{width:60px;height:60px;border-radius:50%;background:var(--or);display:flex;align-items:center;justify-content:center;transition:transform .2s}
+.pb:hover{transform:scale(1.06)}
+.pb::after{content:'';border-style:solid;border-width:9px 0 9px 16px;border-color:transparent transparent transparent var(--wh);margin-left:3px}
+.callout{background:rgba(231,255,90,.06);border-left:3px solid var(--ne);padding:18px 22px;border-radius:0 8px 8px 0;margin:18px 0}
+.dark .callout{background:rgba(231,255,90,.08)}
+.callout p{margin-bottom:6px;font-size:.9rem}
+.callout p:last-child{margin-bottom:0}
+.wild{font-size:1.15rem;font-weight:700;color:var(--ne)}
+
+/* Cards Grid */
+.cg{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin:20px 0}
+.cd{background:var(--wh);border:1px solid #e5e7eb;border-radius:10px;padding:22px;transition:border-color .15s}
+.cd:hover{border-color:var(--or)}
+.cd .num{width:28px;height:28px;background:var(--or);color:var(--wh);border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;margin-bottom:10px}
+
+/* CTA Grid */
+.ctg{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}
+@media(max-width:600px){.ctg{grid-template-columns:1fr}}
+.ctc{padding:28px 22px;border-radius:10px;text-align:center;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04)}
+.ctc h3{margin-bottom:6px}.ctc p{font-size:.85rem;opacity:.75;margin-bottom:14px}
+
+/* Tables */
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.82rem}
+th{text-align:left;padding:10px 14px;background:var(--or);color:var(--wh);font-weight:600;font-size:.7rem;letter-spacing:.04em;text-transform:uppercase}
+th:first-child{border-radius:6px 0 0 0}th:last-child{border-radius:0 6px 0 0}
+td{padding:10px 14px;border-bottom:1px solid #e5e7eb;vertical-align:top}
+tr:nth-child(even){background:var(--of)}
+.impact{color:var(--grn);font-weight:700}
+.total-row{background:rgba(255,89,36,.04)!important;font-weight:700}
+.dark table th{background:rgba(255,255,255,.1)}
+.dark table td{border-color:rgba(255,255,255,.08);color:rgba(255,255,255,.85)}
+.dark table tr:nth-child(even){background:rgba(255,255,255,.03)}
+
+/* Traffic Lights */
+.tl{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.tl.red{background:rgba(239,68,68,.1);color:var(--red)}
+.tl.yel{background:rgba(245,158,11,.1);color:var(--amb)}
+.tl.grn{background:rgba(34,197,94,.1);color:var(--grn)}
+.tl .dot{width:8px;height:8px;border-radius:50%}
+.tl.red .dot{background:var(--red)}.tl.yel .dot{background:var(--amb)}.tl.grn .dot{background:var(--grn)}
+
+/* Biggest Leak */
+.bl{background:var(--dk);color:var(--wh);padding:22px;border-radius:10px;margin:20px 0;border-left:4px solid var(--red)}
+.bl h3{color:var(--red);font-size:.9rem;margin-bottom:6px}
+.bl p{color:rgba(255,255,255,.8);margin-bottom:0;font-size:.88rem}
+
+/* Pillars */
+.pg{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:20px 0}
+.pl{padding:20px;border-radius:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}
+.pl .pn{font-size:1.6rem;font-weight:800;color:var(--ne);line-height:1;margin-bottom:6px}
+.pl h3{font-size:.88rem;margin-bottom:4px}
+.pl p{font-size:.82rem;color:rgba(255,255,255,.65);margin-bottom:0}
+.tagline{font-style:italic;color:var(--g4);margin-top:20px;font-size:.95rem;text-align:center}
+
+/* Steps */
+.steps{counter-reset:st;margin:20px 0}
+.stp{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid #e5e7eb;align-items:flex-start}
+.stp:last-child{border-bottom:0}
+.stp::before{counter-increment:st;content:counter(st);width:32px;height:32px;min-width:32px;background:var(--or);color:var(--wh);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;margin-top:2px}
+.stp-c h3{font-size:.88rem;margin-bottom:2px}
+.stp-c p{font-size:.85rem;color:var(--g5);margin-bottom:0}
+
+/* Week Cards */
+.wk{padding:16px 20px;border-radius:8px;background:var(--wh);border:1px solid #e5e7eb;border-left:3px solid var(--or);margin-bottom:12px}
+.wk .wn{font-size:.68rem;font-weight:700;color:var(--or);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+.wk p{font-size:.85rem;color:var(--g5);margin-bottom:0}
+.qw{background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.15);border-radius:8px;padding:16px 20px;margin-top:16px}
+.qw h3{color:var(--grn);margin-bottom:8px;font-size:.88rem}
+.qw li{font-size:.85rem;margin-bottom:6px;list-style:none;padding-left:20px;position:relative}
+.qw li::before{content:'+';position:absolute;left:0;color:var(--grn);font-weight:700}
+
+/* FAQ */
+.fq{border-bottom:1px solid #e5e7eb}
+.fq-q{padding:14px 0;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:600;font-size:.88rem;user-select:none;gap:10px}
+.fq-q .ic{width:20px;height:20px;min-width:20px;border-radius:5px;background:var(--of);display:flex;align-items:center;justify-content:center;font-size:.75rem;color:var(--g5);transition:transform .25s,background .25s}
+.fq.open .fq-q .ic{transform:rotate(45deg);background:var(--ne-d);color:var(--dk)}
+.fq-a{max-height:0;overflow:hidden;transition:max-height .3s ease;font-size:.85rem;color:var(--g5);line-height:1.7}
+.fq.open .fq-a{max-height:400px;padding-bottom:14px}
+
+/* About */
+.ab{display:flex;gap:20px;align-items:flex-start;margin:16px 0}
+@media(max-width:600px){.ab{flex-direction:column;align-items:center;text-align:center}}
+.av{width:64px;height:64px;border-radius:50%;background:var(--or);display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:var(--wh);font-weight:800;min-width:64px}
+.ab-i h3{font-size:1rem;margin-bottom:1px}
+.ab-i .role{color:var(--g5);font-size:.82rem;margin-bottom:8px}
+.ln-btn{display:inline-block;padding:6px 16px;border-radius:5px;background:var(--or);color:var(--wh);font-size:.78rem;font-weight:600;margin-top:6px;transition:background .15s}
+.ln-btn:hover{background:var(--or-h)}
+
+/* Offer list */
+.ol li{padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:.88rem;list-style:none;padding-left:24px;position:relative;color:rgba(255,255,255,.85)}
+.ol li::before{content:'+';position:absolute;left:0;color:var(--ne);font-weight:700;font-size:1rem}
+
+/* Footer */
+footer{text-align:center;padding:20px;font-size:.7rem;color:var(--g4);border-top:1px solid rgba(255,255,255,.06)}
+.dark footer{border-top-color:rgba(255,255,255,.06)}
+
+/* Metric cards */
+.mc{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin:16px 0}
+.mt{text-align:center;padding:22px 14px;border-radius:10px;background:var(--of);border:1px solid #e5e7eb}
+.mt .mn{font-size:2rem;font-weight:800;color:var(--or);line-height:1}
+.mt .ml{font-size:.72rem;color:var(--g5);margin-top:4px}
+
+/* Timeline */
+.tl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:16px 0}
+.tl-card{border-radius:10px;overflow:hidden;background:var(--wh);border:1px solid #e5e7eb}
+.tl-hd{padding:10px 16px;font-weight:700;font-size:.82rem;color:var(--wh);background:var(--or)}
+.tl-card ul{padding:14px 16px 16px 30px;font-size:.82rem;color:var(--g5)}
+.tl-card li{margin-bottom:4px}
+
+/* Case Study */
+.cs{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:16px 0}
+.cs-p{padding:20px;border-radius:10px}
+.cs-p.ctx{background:#f1f5f9}
+.cs-p.act{background:var(--wh);border:1px solid #e5e7eb}
+.cs-p.res{background:rgba(255,89,36,.04);border:1px solid rgba(255,89,36,.12)}
+.cs-p h3{font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--g5);margin-bottom:8px}
+
+/* Method Flow */
+.mf{display:flex;gap:6px;margin:20px 0;overflow-x:auto}
+@media(max-width:700px){.mf{flex-direction:column}}
+.ms{flex:1;min-width:120px;padding:16px;border-radius:8px;background:var(--of);border:1px solid #e5e7eb;text-align:center}
+.ms .msn{width:24px;height:24px;background:var(--or);color:var(--wh);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;margin:0 auto 8px}
+.ms h3{font-size:.78rem;margin-bottom:2px}
+.ms p{font-size:.7rem;color:var(--g5);margin-bottom:0}
+.ma{display:flex;align-items:center;color:var(--g3);font-size:1rem}
+@media(max-width:700px){.ma{justify-content:center;transform:rotate(90deg)}}
+
+/* Companion Files */
+.cf{background:rgba(231,255,90,.04);border:1px solid rgba(231,255,90,.12);border-radius:10px;padding:20px;margin:16px 0}
+.cf h3{color:var(--dk);font-size:.92rem;margin-bottom:10px}
+.cf-item{padding:10px 0;border-bottom:1px solid rgba(0,0,0,.06);font-size:.85rem}
+.cf-item:last-child{border-bottom:0}
+.cf-item strong{color:var(--dk)}
+.cf-item p{color:var(--g5);font-size:.8rem;margin:4px 0 0}
+</style>
+</head>
+<body>
+
+<!-- TOP BANNER -->
+<div class="tb">Built for <strong>Parker Olson</strong>, Co-Founder at PodPitch — by Jean Mundabi Fala, MDB Growth Capital</div>
+
+<!-- SIDE NAV -->
+<nav class="sn" id="sideNav">
+<a href="#s1" data-t="Package" class="ac"></a><a href="#s2" data-t="Inside"></a><a href="#s3" data-t="Why Now"></a><a href="#s4" data-t="Credibility"></a><a href="#s5" data-t="Gift"></a><a href="#s6" data-t="Get Started"></a><a href="#s7" data-t="Attraction"></a><a href="#s8" data-t="Alignment"></a><a href="#s9" data-t="Activation"></a><a href="#s10" data-t="Money Levers"></a><a href="#s11" data-t="Full Funnel"></a><a href="#s12" data-t="Competition"></a><a href="#s13" data-t="The Gap"></a><a href="#s14" data-t="Funnel"></a><a href="#s14b" data-t="Full Funnel View"></a><a href="#s15" data-t="Weeks 1-6"></a><a href="#s16" data-t="Weeks 7-12"></a><a href="#s17" data-t="Built Assets"></a><a href="#s18" data-t="Results"></a><a href="#s19" data-t="Case Study"></a><a href="#s20" data-t="Approach"></a><a href="#s21" data-t="FAQ"></a><a href="#s22" data-t="About"></a><a href="#s23" data-t="Offer"></a><a href="#s24" data-t="Get Started"></a>
+</nav>
+
+<!-- CARD 1: HERO -->
+<section class="dark hero" id="s1"><div class="w">
+<span class="label rv">MDB Growth Capital</span>
+<h1 class="rv d1">Parker's Special Package</h1>
+<p class="sub rv d2">A Growth Audit for PodPitch — Two Funnels, Three Buyer Segments, and the Agency Opportunity Hiding in Your Platform</p>
+<div class="vid-box rv d3" id="videoEmbed"><div class="pb"></div></div>
+<div class="callout rv">
+<p><strong>How This Document Can Help You</strong></p>
+<p>This doc was crafted solely for you, Parker. Every page is built around the two funnels PodPitch is about to run simultaneously: the sales-led demo path and the new self-serve trial.</p>
+<p>It maps where both funnels will leak and what to do about it. Plus: a full agency acquisition strategy with a built landing page, two ad journeys, and an interactive lead magnet your agency prospects would actually use.</p>
+<p class="wild">Our wild goal? $4M to $8M in additional ARR within 18 months.</p>
+</div>
+</div></section>
+
+<!-- CARD 2: WHAT'S INSIDE -->
+<section id="s2"><div class="w">
+<span class="label rv">What You Get</span>
+<h2 class="rv">What's Inside Your Package?</h2>
+<div class="cg">
+<div class="cd rv"><div class="num">1</div><h3>The Dual Funnel Diagnostic</h3><p>A full AAA audit of both funnels. Attraction. Alignment. Activation. Every layer scored. The biggest leak identified.</p></div>
+<div class="cd rv d1"><div class="num">2</div><h3>The Money Levers</h3><p>7 highest impact fixes ranked by estimated revenue. From landing page segmentation to trial lifecycle to Google Search capture.</p></div>
+<div class="cd rv d2"><div class="num">3</div><h3>The Agency Acquisition Strategy</h3><p>PR agencies are your highest LTV segment. I built the dedicated landing page, two ad journeys, and a lead magnet scorecard.</p></div>
+<div class="cd rv d3"><div class="num">4</div><h3>The 90 Day Roadmap</h3><p>Week by week sprint plan. Split the landing page in week 1. Build Klaviyo lifecycle in week 3. Capture Google Search in week 5.</p></div>
+<div class="cd rv"><div class="num">5</div><h3>Podcast Pitch Readiness Scorecard</h3><p>An interactive quiz your PR agency prospects take to score their client's podcast-readiness. 8 questions, instant score, email capture.</p></div>
+<div class="cd rv d1"><div class="num">6</div><h3>The Full Funnel Map</h3><p>How every piece connects: Top of Funnel (traffic) to Middle (conversion) to Bottom (activation) to Sale. Plus two growth loops that compound.</p></div>
+</div>
+</div></section>
+
+<!-- CARD 3: WHY PODPITCH -->
+<section class="alt" id="s3"><div class="w">
+<span class="label rv">The Research</span>
+<h2 class="rv">Why PodPitch? Why Now?</h2>
+<div class="callout rv"><p><strong>First: the dual funnel launch.</strong><br>PodPitch is going from 100% sales-led to hybrid PLG with a self-serve 2-week trial. That is the hardest GTM transition in SaaS. One landing page currently serves both funnels. A PR agency founder evaluating PodPitch for 15 clients and a solo founder who wants to try it in 5 minutes are landing on the same page with the same CTA.</p></div>
+<div class="callout rv d1"><p><strong>Second: $4M ARR with zero marketers.</strong><br>$100K+/mo profitably scaled on Meta. 5% of all podcast interviews worldwide. Bootstrapped in 18 months. Parker built all of this alone. The Growth Lead hire exists because one person cannot run Meta, build a trial lifecycle in Klaviyo, optimise two landing pages, expand to Google, and measure attribution simultaneously.</p></div>
+<div class="callout rv d2"><p><strong>Third: the agency segment.</strong><br>3,091 PR professionals on the platform. Each manages multiple clients. An agency with 10 client profiles is worth multiples of a solo founder with one profile. But both land on the same page. Same pricing. Same onboarding. Same messaging. The highest LTV segment has no dedicated acquisition path.</p></div>
+<p class="rv d3">You are hiring someone to build this. MDB Growth Capital can install the framework they execute on day one.</p>
+</div></section>
+
+<!-- CARD 4: CREDIBILITY -->
+<section id="s4"><div class="w">
+<span class="label rv">Why Listen To Us</span>
+<h2 class="rv">The package itself is the proof.</h2>
+<p class="sub rv">This document is based on direct research into PodPitch's landing page, pricing structure, competitive landscape, JD intelligence, and buyer psychology. I also built 4 working HTML assets. Not a strategy deck. Built things.</p>
+<div class="mc rv d1">
+<div class="mt"><div class="mn">15%</div><div class="ml">SMB revenue growth at BT/EE</div></div>
+<div class="mt"><div class="mn">GBP 260K</div><div class="ml">Annual CAC savings at Santander</div></div>
+<div class="mt"><div class="mn">20%</div><div class="ml">Conversion improvement (Santander)</div></div>
+</div>
+<p class="sub rv d2">You are a $4M ARR bootstrapped company hiring your first marketer at $120K to $250K. That is a significant bet. The framework in this package is what that person should execute from day one.</p>
+</div></section>
+
+<!-- CARD 5: GIFT -->
+<section class="alt" id="s5"><div class="w">
+<span class="label rv">Our Gift</span>
+<h2 class="rv">The Growth Audit + Built Assets</h2>
+<p class="rv">Here is what you get, for free:</p>
+<ul class="rv d1" style="margin:12px 0 24px 18px;font-size:.9rem">
+<li>The full AAA diagnostic of both funnels. Scored. Evidenced. Actionable.</li>
+<li>7 Money Levers ranked by estimated revenue impact.</li>
+<li>An agency landing page — full HTML, PodPitch brand colours, 15 sections.</li>
+<li>Two ad journey mockups — Solution Aware and Problem Aware traffic.</li>
+<li>An interactive Podcast Pitch Readiness Scorecard — 8 questions, email capture.</li>
+<li>A 90 day roadmap your Growth Lead can execute from week one.</li>
+</ul>
+<h3 class="rv d2">How it works if you want to go further:</h3>
+<div class="steps rv d3">
+<div class="stp"><div class="stp-c"><h3>Read this document</h3><p>Review the companion assets. Take what is useful.</p></div></div>
+<div class="stp"><div class="stp-c"><h3>Reply or book a call</h3><p>15 minutes. No pitch.</p></div></div>
+<div class="stp"><div class="stp-c"><h3>We audit your data</h3><p>Meta data, landing page analytics, CRM pipeline.</p></div></div>
+<div class="stp"><div class="stp-c"><h3>MDB builds the infrastructure</h3><p>Segmented landing pages, Klaviyo lifecycle, Google Search, attribution.</p></div></div>
+<div class="stp"><div class="stp-c"><h3>Your Growth Lead executes</h3><p>We provide the framework. They run it.</p></div></div>
+<div class="stp"><div class="stp-c"><h3>30 day review</h3><p>Scale what works. Kill what doesn't.</p></div></div>
+<div class="stp"><div class="stp-c"><h3>Two optimised funnels</h3><p>Agency product. Google channel producing pipeline.</p></div></div>
+</div>
+</div></section>
+
+<!-- CARD 6: CTA -->
+<section class="dark" id="s6"><div class="w" style="text-align:center">
+<h2 class="rv">2 Options To Get Started</h2>
+<div class="ctg rv d1">
+<div class="ctc"><h3>Just Reply</h3><p>Reply to the email this came with. Tell me which asset stood out.</p><a class="btn b-gh" href="mailto:">Reply to Email</a></div>
+<div class="ctc"><h3>Book A Call</h3><p>15 minutes. I walk you through the three ideas. You keep everything either way.</p><a class="btn b-ne" href="https://cal.com/jean-m-8f4kbr/15min" target="_blank">Book 15 Minutes</a></div>
+</div>
+<p class="rv d2" style="margin-top:16px;font-size:.82rem;color:var(--g4)">No commitment either way. Read the document first. Review the assets. Then decide.</p>
+</div></section>
+
+<!-- CARD 7: LEAK MAP ATTRACTION -->
+<section id="s7"><div class="w">
+<span class="label rv">AAA Diagnostic</span>
+<h2 class="rv">The Leak Map: Attraction Layer</h2>
+<div class="rv"><span class="tl yel"><span class="dot"></span>YELLOW</span></div>
+<p class="rv d1" style="margin-top:12px">$100K+/mo on Meta, profitably scaled according to the JD. The channel works. The problem is concentration and missing segments.</p>
+<table class="rv d2">
+<thead><tr><th>Channel</th><th>Status</th><th>Opportunity</th></tr></thead>
+<tbody>
+<tr><td><strong>Meta Ads</strong></td><td>$100K+/mo (JD: profitably scaled)</td><td>Single channel. 100% concentration is a risk.</td></tr>
+<tr><td><strong>Google Search</strong></td><td>$0</td><td>"Podcast PR tool" goes to Podseeker. High-intent buyers landing on competitors.</td></tr>
+<tr><td><strong>YouTube</strong></td><td>$0</td><td>No demo or comparison content.</td></tr>
+<tr><td><strong>Comparison pages</strong></td><td>None</td><td>"Kitcaster alternative" and "PodPitch vs Rephonic" unowned.</td></tr>
+<tr><td><strong>Agency-specific ads</strong></td><td>None</td><td>Highest LTV segment sees same ads as solo founders.</td></tr>
+</tbody>
+</table>
+</div></section>
+
+<!-- CARD 8: LEAK MAP ALIGNMENT -->
+<section class="alt" id="s8"><div class="w">
+<h2 class="rv">The Leak Map: Alignment Layer</h2>
+<div class="rv"><span class="tl red"><span class="dot"></span>RED</span></div>
+<p class="rv d1" style="margin-top:12px">This is the biggest leak. One landing page serves two funnels and three buyer segments.</p>
+<table class="rv d2">
+<thead><tr><th>Problem</th><th>Evidence</th><th>Impact</th></tr></thead>
+<tbody>
+<tr><td><strong>Dual CTA confusion</strong></td><td>"Try for free" and "Book Demo" side by side</td><td>Decision paralysis. Both paths underperform.</td></tr>
+<tr><td><strong>Floating demo popup</strong></td><td>Calendly card appears for ALL visitors after 10 seconds</td><td>Trial conversion drops. Trial users pushed to a call.</td></tr>
+<tr><td><strong>Generic headline</strong></td><td>"Effortlessly secure the spotlight"</td><td>No segment feels "this is for me."</td></tr>
+<tr><td><strong>No segment proof</strong></td><td>Agency testimonials mixed with founder testimonials</td><td>Agencies don't see agency outcomes.</td></tr>
+<tr><td><strong>No G2 reviews</strong></td><td>Zero reviews. PodMatch has 4.9 stars.</td><td>Enterprise/agency buyers check G2 first.</td></tr>
+</tbody>
+</table>
+</div></section>
+
+<!-- CARD 9: LEAK MAP ACTIVATION -->
+<section id="s9"><div class="w">
+<h2 class="rv">The Leak Map: Activation Layer</h2>
+<div class="rv"><span class="tl yel"><span class="dot"></span>YELLOW</span></div>
+<table class="rv d1" style="margin-top:12px">
+<thead><tr><th>Path</th><th>Status</th><th>Gap</th></tr></thead>
+<tbody>
+<tr><td><strong>Sales-led (demo to close)</strong></td><td>Working. Parker closes.</td><td>Bottleneck: Parker is the only closer.</td></tr>
+<tr><td><strong>PLG (trial to paid)</strong></td><td>Not built.</td><td>No Klaviyo lifecycle. No activation triggers. No segmented onboarding.</td></tr>
+</tbody>
+</table>
+<div class="bl rv d2">
+<h3>THE BIGGEST LEAK: ALIGNMENT</h3>
+<p>One page. Two funnels. Three buyer types. Zero segmentation. The page is the bottleneck. Split it and both funnels improve immediately.</p>
+</div>
+</div></section>
+
+<!-- CARD 10: MONEY LEVERS -->
+<section class="alt" id="s10"><div class="w">
+<span class="label rv">Priority Fixes</span>
+<h2 class="rv">The Money Levers</h2>
+<table class="rv d1">
+<thead><tr><th>#</th><th>Lever</th><th>Current</th><th>Fix</th><th>Est. Impact</th></tr></thead>
+<tbody>
+<tr><td>1</td><td><strong>Landing page segmentation</strong></td><td>One page, two funnels</td><td>Dedicated /agencies, /try, main</td><td class="impact">$800K to $1.5M</td></tr>
+<tr><td>2</td><td><strong>Trial lifecycle (Klaviyo)</strong></td><td>Does not exist</td><td>Welcome, first-pitch nudge, re-engage, conversion</td><td class="impact">$500K to $1M</td></tr>
+<tr><td>3</td><td><strong>Google Search capture</strong></td><td>$0 spent</td><td>"Podcast PR tool," "Kitcaster alternative," comparison pages</td><td class="impact">$400K to $800K</td></tr>
+<tr><td>4</td><td><strong>Agency segment</strong></td><td>Same plan as founders</td><td>Agency LP, agency proof, volume positioning</td><td class="impact">$300K to $600K</td></tr>
+<tr><td>5</td><td><strong>Comparison pages</strong></td><td>None</td><td>PodPitch vs Kitcaster, vs Rephonic, vs manual</td><td class="impact">$200K to $500K</td></tr>
+<tr><td>6</td><td><strong>Demo popup for trial</strong></td><td>Appears for ALL</td><td>Show only for demo-intent visitors</td><td class="impact">$100K to $300K</td></tr>
+<tr><td>7</td><td><strong>G2 reviews</strong></td><td>Zero</td><td>Campaign: top 50 users. Badge on site.</td><td class="impact">$100K to $200K</td></tr>
+<tr class="total-row"><td></td><td colspan="3"><strong>Estimated total (projected at current spend levels)</strong></td><td class="impact">$2.4M to $4.9M</td></tr>
+</tbody>
+</table>
+</div></section>
+
+<!-- CARD 11: FUNNEL CASCADE -->
+<section class="dark" id="s11"><div class="w">
+<span class="label rv">How It All Connects</span>
+<h2 class="rv">How PodPitch Gets More Leads and Converts Them</h2>
+<p class="sub rv d1">Every deliverable in this package maps to a stage in your acquisition journey. Nothing is random. Here is how each piece moves prospects from "never heard of PodPitch" to "paying customer."</p>
+
+<!-- Funnel Cascade Visual -->
+<div style="margin:28px 0" class="rv d2">
+
+<!-- TOP OF FUNNEL -->
+<div style="padding:24px;border-radius:10px 10px 0 0;background:rgba(255,89,36,.08);border:1px solid rgba(255,89,36,.2);border-bottom:0">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+<div style="font-size:1rem;font-weight:800;color:var(--or)">Top of Funnel</div>
+<div style="font-size:.7rem;padding:3px 10px;border-radius:4px;background:rgba(255,89,36,.15);color:var(--or);font-weight:600">DISCOVER</div>
+</div>
+<p style="font-size:.85rem;color:var(--g4);margin-bottom:12px">Prospect sees PodPitch for the first time. They don't know you yet.</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<div style="padding:10px 12px;border-radius:6px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);font-size:.8rem">
+<strong style="color:var(--wh);font-size:.75rem">What we install:</strong>
+<ul style="margin:6px 0 0 14px;font-size:.78rem;color:var(--g4)">
+<li>Agency-specific Meta creative</li>
+<li>Google Search campaigns</li>
+<li>PvP Scorecard (lead magnet)</li>
+<li>YouTube comparison content</li>
+</ul>
+</div>
+<div style="padding:10px 12px;border-radius:6px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);font-size:.8rem">
+<strong style="color:var(--wh);font-size:.75rem">What's missing now:</strong>
+<ul style="margin:6px 0 0 14px;font-size:.78rem;color:var(--g4)">
+<li>Google = $0 (Podseeker owns it)</li>
+<li>No agency creative (one-size-fits-all)</li>
+<li>No lead magnet for unaware traffic</li>
+<li>No comparison content on YouTube</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div style="text-align:center;padding:6px 0;background:var(--dk-s);font-size:.9rem;color:var(--g4)">&#8595;</div>
+
+<!-- MIDDLE OF FUNNEL -->
+<div style="padding:24px;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.15);border-bottom:0;border-top:0">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+<div style="font-size:1rem;font-weight:800;color:var(--amb)">Middle of Funnel</div>
+<div style="font-size:.7rem;padding:3px 10px;border-radius:4px;background:rgba(245,158,11,.12);color:var(--amb);font-weight:600">EVALUATE</div>
+</div>
+<p style="font-size:.85rem;color:var(--g4);margin-bottom:12px">They land on the page. Read the proof. Compare to Kitcaster and Rephonic. Decide whether to try or book a demo.</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<div style="padding:10px 12px;border-radius:6px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);font-size:.8rem">
+<strong style="color:var(--wh);font-size:.75rem">What we install:</strong>
+<ul style="margin:6px 0 0 14px;font-size:.78rem;color:var(--g4)">
+<li>Agency landing page (demo CTA, agency proof)</li>
+<li>Trial landing page (self-serve, no demo popup)</li>
+<li>Comparison pages vs Kitcaster, Rephonic</li>
+<li>G2 review campaign (credibility asset)</li>
+</ul>
+</div>
+<div style="padding:10px 12px;border-radius:6px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);font-size:.8rem">
+<strong style="color:var(--wh);font-size:.75rem">What's missing now:</strong>
+<ul style="margin:6px 0 0 14px;font-size:.78rem;color:var(--g4)">
+<li>One page for all buyers (agencies = founders)</li>
+<li>Calendly popup interrupts trial users</li>
+<li>No comparison pages on site</li>
+<li>Zero G2 reviews (PodMatch has 4.9)</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div style="text-align:center;padding:6px 0;background:var(--dk-s);font-size:.9rem;color:var(--g4)">&#8595;</div>
+
+<!-- BOTTOM OF FUNNEL -->
+<div style="padding:24px;background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.12);border-bottom:0;border-top:0">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+<div style="font-size:1rem;font-weight:800;color:var(--grn)">Bottom of Funnel</div>
+<div style="font-size:.7rem;padding:3px 10px;border-radius:4px;background:rgba(34,197,94,.1);color:var(--grn);font-weight:600">ACTIVATE</div>
+</div>
+<p style="font-size:.85rem;color:var(--g4);margin-bottom:12px">Trial user sends first pitch. Sees bookings come in. Gets activation nudges via Klaviyo. Quick wins build trust.</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<div style="padding:10px 12px;border-radius:6px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);font-size:.8rem">
+<strong style="color:var(--wh);font-size:.75rem">What we install:</strong>
+<ul style="margin:6px 0 0 14px;font-size:.78rem;color:var(--g4)">
+<li>Klaviyo activation sequence (hour 24 nudge)</li>
+<li>Day-5 re-engagement trigger</li>
+<li>Post-demo nurture (case study, ROI calc)</li>
+<li>Segment-specific onboarding paths</li>
+</ul>
+</div>
+<div style="padding:10px 12px;border-radius:6px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);font-size:.8rem">
+<strong style="color:var(--wh);font-size:.75rem">What's missing now:</strong>
+<ul style="margin:6px 0 0 14px;font-size:.78rem;color:var(--g4)">
+<li>No trial lifecycle emails</li>
+<li>No activation triggers</li>
+<li>No segmented onboarding</li>
+<li>Demo follow-up is manual</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div style="text-align:center;padding:6px 0;background:var(--dk-s);font-size:.9rem;color:var(--g4)">&#8595;</div>
+
+<!-- SALE -->
+<div style="padding:24px;border-radius:0 0 10px 10px;background:rgba(231,255,90,.06);border:1px solid rgba(231,255,90,.12);border-top:0">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+<div style="font-size:1rem;font-weight:800;color:var(--ne)">Sale</div>
+<div style="font-size:.7rem;padding:3px 10px;border-radius:4px;background:rgba(231,255,90,.1);color:#a3b834;font-weight:600">CONVERT</div>
+</div>
+<p style="font-size:.85rem;color:var(--g4);margin-bottom:12px">After getting results in the trial, they convert to paid. After the demo, Parker closes. Revenue.</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<div style="padding:10px 12px;border-radius:6px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);font-size:.8rem">
+<strong style="color:var(--wh);font-size:.75rem">What we install:</strong>
+<ul style="margin:6px 0 0 14px;font-size:.78rem;color:var(--g4)">
+<li>Trial-to-paid conversion triggers (day 10)</li>
+<li>Annual plan offer (day 13 urgency)</li>
+<li>Attribution: know which channel produced each sale</li>
+<li>Expansion: additional profiles, team seats</li>
+</ul>
+</div>
+<div style="padding:10px 12px;border-radius:6px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);font-size:.8rem">
+<strong style="color:var(--wh);font-size:.75rem">What's missing now:</strong>
+<ul style="margin:6px 0 0 14px;font-size:.78rem;color:var(--g4)">
+<li>No conversion triggers in trial</li>
+<li>No pricing context during trial</li>
+<li>Attribution is messy (JD: "imperfect data")</li>
+<li>No expansion campaigns</li>
+</ul>
+</div>
+</div>
+</div>
+
+</div>
+
+<!-- 3 Growth Loops -->
+<h3 class="rv" style="margin-top:24px;color:var(--wh)">Three Growth Loops That Compound</h3>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:14px 0" class="rv d3">
+<div style="padding:18px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06)">
+<div style="font-size:.75rem;font-weight:700;color:var(--or);margin-bottom:6px">Cold Email to Ad Creative</div>
+<p style="font-size:.78rem;color:var(--g4);margin:0;line-height:1.5">PodPitch bootstrapped to $4M. The cold email angles that booked demos are PROVEN messages. Feed those validated hooks into Meta ad creative. Email tests the message cheaply. Ads amplify what already works.</p>
+</div>
+<div style="padding:18px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06)">
+<div style="font-size:.75rem;font-weight:700;color:var(--amb);margin-bottom:6px">Case Study Growth Loop</div>
+<p style="font-size:.78rem;color:var(--g4);margin:0;line-height:1.5">PodPitch has 50+ testimonials. But nobody has mined them for ad hooks, landing page headlines, or activation triggers. Every happy customer interview is a Mind-Reader survey. Their words become your next ad, your next email, your next onboarding message.</p>
+</div>
+<div style="padding:18px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06)">
+<div style="font-size:.75rem;font-weight:700;color:var(--grn);margin-bottom:6px">Test, Measure, Scale</div>
+<p style="font-size:.78rem;color:var(--g4);margin:0;line-height:1.5">Weekly experiment cadence. Every test produces a learning. Winning experiments get 3x budget. Losing experiments get killed. Attribution connects spend to revenue so every decision is data-backed.</p>
+</div>
+</div>
+
+<p class="tagline rv" style="margin-top:16px">This is how every lead moves from "never heard of PodPitch" to "paying customer."</p>
+</div></section>
+
+<!-- CARD 12: COMPETITION -->
+<section id="s12"><div class="w">
+<span class="label rv">Market Position</span>
+<h2 class="rv">PodPitch vs. The Market</h2>
+<div style="overflow-x:auto" class="rv d1">
+<table>
+<thead><tr><th>Factor</th><th style="background:var(--dk)">PodPitch</th><th>Kitcaster</th><th>Rephonic</th><th>PodMatch</th><th>Podseeker</th></tr></thead>
+<tbody>
+<tr><td>Database</td><td><strong>4M+</strong></td><td>Curated</td><td>3M+</td><td>Member-only</td><td>177K</td></tr>
+<tr><td>AI pitches</td><td><strong>Learns voice</strong></td><td>Template</td><td>No outreach</td><td>No outreach</td><td>AI assisted</td></tr>
+<tr><td>User's email</td><td><strong>Yes</strong></td><td>No</td><td>No</td><td>No</td><td>Yes</td></tr>
+<tr><td>Tracking</td><td><strong>Yes</strong></td><td>N/A</td><td>No</td><td>No</td><td>Yes</td></tr>
+<tr><td>Price</td><td><strong>$200/mo</strong></td><td>$2,100/mo</td><td>$99-$299</td><td>$6-$64</td><td>$49+</td></tr>
+<tr><td>G2</td><td>None</td><td>N/A</td><td>Limited</td><td><strong>4.9</strong></td><td>Limited</td></tr>
+</tbody>
+</table>
+</div>
+<div class="callout rv d2"><p><strong>PodPitch owns the intersection</strong> of database scale, AI voice cloning, real email sending, and tracking. Nobody else does all four. The vulnerability: zero G2 reviews while PodMatch has 4.9, and Podseeker owns the Google Search keywords PodPitch should own.</p></div>
+</div></section>
+
+<!-- CARD 13: THE GAP -->
+<section class="alt" id="s13"><div class="w">
+<span class="label rv">The Insight</span>
+<h2 class="rv">Two Funnels Need Two Pages. Three Segments Need Three Paths.</h2>
+<p class="rv d1"><strong>What a PR agency founder sees:</strong> "Effortlessly secure the spotlight" + "Try for free" + "Book Demo" + floating Calendly popup + founder testimonials. Nothing says "this is for agencies running 20 clients."</p>
+<p class="rv d2"><strong>What a solo founder sees:</strong> The same page but with the Calendly popup interrupting their "I just want to try it" flow.</p>
+<p class="rv d3">I built what this looks like. The agency landing page, both ad journeys, and the scorecard lead magnet are included as companion files.</p>
+</div></section>
+
+<!-- CARD 14: FUNNEL -->
+<section id="s14"><div class="w">
+<span class="label rv">The System</span>
+<h2 class="rv">How Each Sprint Connects</h2>
+<table class="rv d1">
+<thead><tr><th>Sprint</th><th>What Gets Built</th><th>What It Unlocks</th></tr></thead>
+<tbody>
+<tr><td><strong>Days 1 to 30</strong></td><td>Agency LP live. Trial page separated. Klaviyo built. First Google campaigns.</td><td>Two conversion paths. Trial activation. First Google data.</td></tr>
+<tr><td><strong>Days 31 to 60</strong></td><td>Comparison pages. Agency Meta creative. G2 campaign. Trial lifecycle optimised.</td><td>Competitive traffic. Agency pipeline. Trial conversion improving.</td></tr>
+<tr><td><strong>Days 61 to 90</strong></td><td>YouTube content. PvP scorecard live. Full attribution. Documented playbook.</td><td>Unaware traffic via scorecard. Growth Lead has a working system.</td></tr>
+</tbody>
+</table>
+</div></section>
+
+<!-- CARD 14B: SHOWING HOW — FULL FUNNEL VIEW -->
+<section class="dark" id="s14b"><div class="w">
+<span class="label rv">The Full Picture</span>
+<h2 class="rv">How Each Piece Drives Revenue Down The Funnel</h2>
+<p class="sub rv d1">Every deliverable in this package maps to a specific stage. Nothing is random. Each piece moves prospects closer to paying.</p>
+
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:28px 0;text-align:center" class="rv d2">
+<div style="padding:20px 12px;border-radius:10px;background:rgba(255,89,36,.08);border:1px solid rgba(255,89,36,.2)">
+<div style="font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--or);margin-bottom:6px">Top of Funnel</div>
+<div style="font-size:.85rem;font-weight:700;color:var(--wh);margin-bottom:8px">Discover</div>
+<div style="font-size:.75rem;color:var(--g4);line-height:1.5">Prospect sees Meta ad or finds PodPitch on Google. First impression. They don't know you yet.</div>
+</div>
+<div style="padding:20px 12px;border-radius:10px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2)">
+<div style="font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--amb);margin-bottom:6px">Middle of Funnel</div>
+<div style="font-size:.85rem;font-weight:700;color:var(--wh);margin-bottom:8px">Evaluate</div>
+<div style="font-size:.75rem;color:var(--g4);line-height:1.5">They land on the page. Read the proof. Compare to Kitcaster and Rephonic. Decide whether to try or book a demo.</div>
+</div>
+<div style="padding:20px 12px;border-radius:10px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2)">
+<div style="font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--grn);margin-bottom:6px">Bottom of Funnel</div>
+<div style="font-size:.85rem;font-weight:700;color:var(--wh);margin-bottom:8px">Activate</div>
+<div style="font-size:.75rem;color:var(--g4);line-height:1.5">Trial user sends first pitch. Sees bookings come in. Gets activation nudges via Klaviyo. Quick wins build trust.</div>
+</div>
+<div style="padding:20px 12px;border-radius:10px;background:rgba(231,255,90,.08);border:1px solid rgba(231,255,90,.2)">
+<div style="font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ne);margin-bottom:6px">Sale</div>
+<div style="font-size:.85rem;font-weight:700;color:var(--wh);margin-bottom:8px">Convert</div>
+<div style="font-size:.75rem;color:var(--g4);line-height:1.5">After getting results in the trial, they convert to paid. Or after the demo, Parker closes. Revenue.</div>
+</div>
+</div>
+
+<div style="margin-top:20px" class="rv d3">
+<table>
+<thead><tr><th style="background:rgba(255,255,255,.1)">What We Built</th><th style="background:rgba(255,255,255,.1)">Funnel Stage</th><th style="background:rgba(255,255,255,.1)">What It Does</th></tr></thead>
+<tbody>
+<tr><td><strong>Meta ad (agency creative)</strong></td><td style="color:var(--or)">Top</td><td>Reaches PR agencies where they scroll. Segments from founders.</td></tr>
+<tr><td><strong>Google Search campaigns</strong></td><td style="color:var(--or)">Top</td><td>Captures high-intent buyers searching "podcast PR tool." Currently going to Podseeker.</td></tr>
+<tr><td><strong>PvP Scorecard (lead magnet)</strong></td><td style="color:var(--or)">Top</td><td>Captures unaware traffic. Educates before selling. Email gate feeds Klaviyo.</td></tr>
+<tr><td><strong>Agency landing page</strong></td><td style="color:var(--amb)">Middle</td><td>Converts agency traffic with agency proof, agency comparison, agency CTA.</td></tr>
+<tr><td><strong>Trial landing page</strong></td><td style="color:var(--amb)">Middle</td><td>Converts founder traffic with "start in 60 seconds" and no demo popup.</td></tr>
+<tr><td><strong>Comparison pages</strong></td><td style="color:var(--amb)">Middle</td><td>PodPitch vs Kitcaster, vs Rephonic. Wins the evaluation.</td></tr>
+<tr><td><strong>Klaviyo activation sequence</strong></td><td style="color:var(--grn)">Bottom</td><td>Nudges trial users to send first pitch. Re-engages at day 5. Conversion trigger at day 10.</td></tr>
+<tr><td><strong>Post-demo nurture</strong></td><td style="color:var(--grn)">Bottom</td><td>Case study email, comparison guide, ROI calculator for demo prospects who didn't close.</td></tr>
+<tr><td><strong>G2 reviews</strong></td><td style="color:var(--amb)">Middle</td><td>Credibility asset. Agency buyers check G2 before purchasing. Close the gap with PodMatch 4.9.</td></tr>
+<tr><td><strong>Trial-to-paid conversion</strong></td><td style="color:var(--ne)">Sale</td><td>Day 10 pricing context. Day 13 urgency. Annual plan offer.</td></tr>
+</tbody>
+</table>
+</div>
+
+<p class="rv" style="margin-top:20px;text-align:center;font-size:.88rem;color:var(--g4)">Every row in the 90-day roadmap below maps to one of these funnel stages. Nothing is built without a purpose.</p>
+</div></section>
+
+<!-- CARD 15: WEEKS 1-6 -->
+<section class="alt" id="s15"><div class="w">
+<span class="label rv">90 Day Roadmap</span>
+<h2 class="rv">Weeks 1 to 6: Split, Build, Test</h2>
+<div class="wk rv"><div class="wn">Week 1 <span style="float:right;font-size:.6rem;padding:2px 6px;border-radius:3px;background:rgba(245,158,11,.1);color:var(--amb)">MIDDLE FUNNEL</span></div><h3>Split the Landing Page</h3><p>Create /agencies (demo CTA, agency proof). Create /try (trial CTA, no demo popup). Route Meta traffic by segment.</p></div>
+<div class="wk rv"><div class="wn">Week 2 <span style="float:right;font-size:.6rem;padding:2px 6px;border-radius:3px;background:rgba(245,158,11,.1);color:var(--amb)">MIDDLE FUNNEL</span></div><h3>Agency Landing Page Polish</h3><p>15-section high-converting page. PodPitch brand colours. Working mockup included in this package.</p></div>
+<div class="wk rv"><div class="wn">Week 3 <span style="float:right;font-size:.6rem;padding:2px 6px;border-radius:3px;background:rgba(34,197,94,.1);color:var(--grn)">BOTTOM FUNNEL</span></div><h3>Klaviyo Trial Lifecycle</h3><p>6-email sequence: welcome, first-pitch nudge (hour 24), engagement (day 3), re-engagement (day 5), trial-ending (day 10), last day (day 13).</p></div>
+<div class="wk rv"><div class="wn">Week 4 <span style="float:right;font-size:.6rem;padding:2px 6px;border-radius:3px;background:rgba(231,255,90,.1);color:#a3b834">MEASURE</span></div><h3>Baseline Metrics</h3><p>Demo rate per page, trial start rate, trial activation rate (first pitch within 24 hours), trial-to-paid conversion.</p></div>
+<div class="wk rv"><div class="wn">Week 5 <span style="float:right;font-size:.6rem;padding:2px 6px;border-radius:3px;background:rgba(255,89,36,.1);color:var(--or)">TOP FUNNEL</span></div><h3>Google Search Launch</h3><p>"Podcast PR tool," "podcast booking platform," "Kitcaster alternative." Comparison landing pages.</p></div>
+<div class="wk rv"><div class="wn">Week 6 <span style="float:right;font-size:.6rem;padding:2px 6px;border-radius:3px;background:rgba(245,158,11,.1);color:var(--amb)">MIDDLE FUNNEL</span></div><h3>G2 Review Campaign</h3><p>Email top 50 happiest users. Goal: 20+ reviews in 30 days. G2 badge on website.</p></div>
+</div></section>
+
+<!-- CARD 16: WEEKS 7-12 -->
+<section id="s16"><div class="w">
+<h2 class="rv">Weeks 7 to 12: Scale, Expand, Document</h2>
+<div class="wk rv"><div class="wn">Week 7 <span style="float:right;font-size:.6rem;padding:2px 6px;border-radius:3px;background:rgba(255,89,36,.1);color:var(--or)">TOP FUNNEL</span></div><h3>Scale Winners</h3><p>Pages that outperform get 3x Meta budget. Kill underperformers.</p></div>
+<div class="wk rv"><div class="wn">Week 8 <span style="float:right;font-size:.6rem;padding:2px 6px;border-radius:3px;background:rgba(255,89,36,.1);color:var(--or)">TOP FUNNEL</span></div><h3>PvP Scorecard Launch</h3><p>Deploy the Podcast Pitch Readiness Scorecard as agency lead magnet. Meta ads for unaware traffic.</p></div>
+<div class="wk rv"><div class="wn">Week 9 <span style="float:right;font-size:.6rem;padding:2px 6px;border-radius:3px;background:rgba(255,89,36,.1);color:var(--or)">TOP FUNNEL</span></div><h3>YouTube Comparison Content</h3><p>"PodPitch vs Kitcaster" and "How to Book 7 Podcast Interviews a Month."</p></div>
+<div class="wk rv"><div class="wn">Week 10 <span style="float:right;font-size:.6rem;padding:2px 6px;border-radius:3px;background:rgba(34,197,94,.1);color:var(--grn)">BOTTOM FUNNEL</span></div><h3>Optimise Trial Lifecycle</h3><p>Analyse Klaviyo data. Which emails get clicked? Where do trial users drop off? Optimise.</p></div>
+<div class="wk rv"><div class="wn">Week 11 <span style="float:right;font-size:.6rem;padding:2px 6px;border-radius:3px;background:rgba(245,158,11,.1);color:var(--amb)">MIDDLE FUNNEL</span></div><h3>Competitor Comparison Pages</h3><p>"PodPitch vs Rephonic," "PodPitch vs Manual." SEO optimised.</p></div>
+<div class="wk rv"><div class="wn">Week 12 <span style="float:right;font-size:.6rem;padding:2px 6px;border-radius:3px;background:rgba(231,255,90,.1);color:#a3b834">DOCUMENT</span></div><h3>Playbook Handoff</h3><p>Document everything. Hand to the Growth Lead. They execute from day one, not month six.</p></div>
+<div class="qw rv">
+<h3>Quick Wins (Starting Now)</h3>
+<ul>
+<li>Remove Calendly popup for trial-intent visitors</li>
+<li>Create "PodPitch vs Kitcaster" comparison page</li>
+<li>Email top 20 agency users asking for G2 reviews</li>
+</ul>
+</div>
+</div></section>
+
+<!-- CARD 17: BUILT ASSETS -->
+<section class="alt" id="s17"><div class="w">
+<span class="label rv">Proof of Capability</span>
+<h2 class="rv">What I Built for PodPitch</h2>
+<p class="rv d1">Instead of just describing what we would do, I built it. Four working HTML files are included:</p>
+<div class="cf rv d2">
+<div class="cf-item"><strong>1. Agency Landing Page</strong><p>15-section page in PodPitch brand colours. Headline from Mind-Reader research. FAQ from Internal Objection analysis. Comparison table. 3 video testimonial placeholders. Golden Hippo offer.</p></div>
+<div class="cf-item"><strong>2. Ad Journey: Aware Traffic</strong><p>3-step path: Meta ad ("40 hours to 30 minutes") > Agency landing page > Demo booked. Ad-to-Page Congruence scored at each step.</p></div>
+<div class="cf-item"><strong>3. Ad Journey: Unaware Traffic</strong><p>4-step path: Meta ad ("200 pitches. How many bookings?") > PvP Scorecard > Klaviyo nurture (4 emails) > Demo. Education before the ask.</p></div>
+<div class="cf-item"><strong>4. Podcast Pitch Readiness Scorecard</strong><p>Interactive 8-question quiz. Scores Experience, Guest Profile, Topic Clarity, Media Knowledge, Pitch Method, Reply Rate, ROI Tracking, Time Efficiency. Email gate captures leads.</p></div>
+</div>
+<p class="rv d3" style="font-size:.85rem;color:var(--g5)">Every file uses PodPitch's actual brand colours (extracted via Playwright from podpitch.com). Every section uses Mind-Reader Language Bank data. These are not wireframes. They are deployable.</p>
+</div></section>
+
+<!-- CARD 18: KEY RESULTS -->
+<section id="s18"><div class="w">
+<span class="label rv">Projected Outcomes</span>
+<h2 class="rv">What Changes</h2>
+<div class="tl-grid rv d1">
+<div class="tl-card"><div class="tl-hd">30 Days</div><ul><li>Two dedicated landing pages live</li><li>Klaviyo trial lifecycle running</li><li>First Google Search campaigns live</li><li>Baseline metrics for both funnels</li><li>G2 review campaign launched</li></ul></div>
+<div class="tl-card"><div class="tl-hd">90 Days</div><ul><li>Trial-to-paid conversion established</li><li>Agency pipeline growing independently</li><li>Google Search producing demos</li><li>PvP scorecard live as lead magnet</li><li>20+ G2 reviews</li></ul></div>
+<div class="tl-card"><div class="tl-hd">12 Months</div><ul><li>$8M+ ARR (from $4M)</li><li>Trial: 40%+ of new revenue</li><li>Agency ACV significantly higher</li><li>Google: 20%+ of new trials</li><li>Growth Lead runs independently</li></ul></div>
+</div>
+</div></section>
+
+<!-- CARD 19: CASE STUDY -->
+<section class="alt" id="s19"><div class="w">
+<span class="label rv">Proof</span>
+<h2 class="rv">How BT Built Marketing Attribution from Scratch</h2>
+<div class="cs rv d1">
+<div class="cs-p ctx"><h3>Context</h3><p>BT/EE's SMB marketing produced campaigns across multiple channels but had no system connecting spend to revenue. Multiple channels. No single source of truth.</p></div>
+<div class="cs-p act"><h3>Action</h3><p>Jean built the single source of truth from scratch. Weekly trading sessions bringing Marketing, Finance, and Commercial together. Identified which channels drove actual revenue.</p></div>
+<div class="cs-p res"><h3>Result</h3><p><strong style="font-size:1.2rem">15%</strong> SMB revenue growth<br><strong style="font-size:1.2rem">25%</strong> lead acquisition improvement<br>Permanent cross-functional tiger team still operates</p></div>
+</div>
+<div class="callout rv d2"><p><strong>Why this matters for PodPitch:</strong> Parker wants marketing that produces measurable pipeline, not "brand awareness." The BT project was exactly this: building a system that connects marketing spend to revenue in a company that had never measured it.</p></div>
+</div></section>
+
+<!-- CARD 20: APPROACH -->
+<section id="s20"><div class="w">
+<span class="label rv">How We Work</span>
+<h2 class="rv">The Growth Feedback Loop</h2>
+<p class="sub rv">Not a one-time project. A system that gets smarter every week.</p>
+<div class="mf rv d1">
+<div class="ms"><div class="msn">1</div><h3>Test</h3><p>Launch experiment with hypothesis</p></div>
+<div class="ma">&#8594;</div>
+<div class="ms"><div class="msn">2</div><h3>Measure</h3><p>Track what happened vs expected</p></div>
+<div class="ma">&#8594;</div>
+<div class="ms"><div class="msn">3</div><h3>Learn</h3><p>What worked? What didn't? Why?</p></div>
+<div class="ma">&#8594;</div>
+<div class="ms"><div class="msn">4</div><h3>Scale</h3><p>3x budget on winners. Kill losers.</p></div>
+<div class="ma">&#8594;</div>
+<div class="ms"><div class="msn">5</div><h3>Document</h3><p>Playbook for your Growth Lead</p></div>
+</div>
+<div class="callout rv d2" style="margin-top:20px;background:rgba(231,255,90,.04);border-color:rgba(231,255,90,.2)">
+<p style="font-size:.85rem"><strong>The Cold Email to Ad Pipeline:</strong> PodPitch bootstrapped to $4M. The cold email angles that booked demos are proven messages. Those validated hooks should feed your Meta ad creative. Cold email tests the message cheaply. Ads amplify what already converts. If you have emails that booked calls, those subject lines are your highest-confidence ad headlines.</p>
+</div>
+<div class="callout rv d3" style="margin-top:12px;background:rgba(255,89,36,.04);border-color:rgba(255,89,36,.2)">
+<p style="font-size:.85rem"><strong>The Case Study Growth Loop:</strong> You have 50+ testimonials on your trial page. Each one contains a pain point (ad hook), a transformation story (landing page copy), and an "aha moment" (trial activation trigger). Mine them. Every happy customer interview feeds better ads, better pages, and better onboarding. The loop compounds forever.</p>
+</div>
+</div></section>
+
+<!-- CARD 21: FAQ -->
+<section class="alt" id="s21"><div class="w">
+<span class="label rv">Questions</span>
+<h2 class="rv">Frequently Asked Questions</h2>
+<div class="rv d1">
+<div class="fq"><div class="fq-q">Why is this free?<span class="ic">+</span></div><div class="fq-a">Because the package itself is the proof. I also built 4 working HTML assets for PodPitch. If this makes you think "this person understands our growth challenge," that is worth more than any sales call.</div></div>
+<div class="fq"><div class="fq-q">I built this to $4M without a marketer. Why do I need one now?<span class="ic">+</span></div><div class="fq-a">Because you are launching a second funnel. The PLG trial path needs Klaviyo lifecycle, activation triggers, segmented onboarding, and conversion analytics. Running both simultaneously while managing $100K+/mo in Meta is a 3-person workload.</div></div>
+<div class="fq"><div class="fq-q">How is MDB different from a marketing agency?<span class="ic">+</span></div><div class="fq-a">Agencies produce campaigns. MDB installs infrastructure. The segmented landing pages, Klaviyo lifecycle, attribution system, and testing framework become permanent assets your team owns and operates. When we leave, the system stays.</div></div>
+<div class="fq"><div class="fq-q">Will the Growth Lead be able to execute this?<span class="ic">+</span></div><div class="fq-a">That is the point. This package is the onboarding document. Instead of spending 3 months figuring out what to build, they execute from week one. The landing page is built. The ad journeys are designed. The lifecycle is architected.</div></div>
+<div class="fq"><div class="fq-q">What about the AI-native requirement?<span class="ic">+</span></div><div class="fq-a">Everything in this package was built with Claude Code. The landing page, the ad journeys, the scorecard, this document. That is how fast we work.</div></div>
+<div class="fq"><div class="fq-q">We're bootstrapped. Is this a good use of capital?<span class="ic">+</span></div><div class="fq-a">The landing page split, Klaviyo lifecycle, and Google Search campaigns are execution tasks that produce measurable pipeline. If trial conversion hits 15%+ and the agency page converts better than the generic page, the ROI is proven by day 30.</div></div>
+<div class="fq"><div class="fq-q">How quickly will we see results?<span class="ic">+</span></div><div class="fq-a">Segmented landing pages live in week 1. Klaviyo lifecycle live in week 3. First Google Search data in week 5. Documented playbook by week 12.</div></div>
+</div>
+</div></section>
+
+<!-- CARD 22: ABOUT -->
+<section id="s22"><div class="w">
+<span class="label rv">About</span>
+<h2 class="rv">Jean Mundabi Fala</h2>
+<div class="ab rv d1">
+<div class="av">JM</div>
+<div class="ab-i">
+<h3>Jean Mundabi Fala</h3>
+<div class="role">CEO, MDB Growth Capital</div>
+<p style="font-size:.88rem">Based in the UK. Originally from DRC. Fluent in French and English. 3+ years leading SMB performance marketing at BT/EE. 2+ years managing GBP 30 to 40M marketing budgets at Santander. Master's in Business Intelligence and Data Mining.</p>
+<a href="https://linkedin.com/in/jeanmundabi" target="_blank" class="ln-btn">Connect on LinkedIn</a>
+</div>
+</div>
+</div></section>
+
+<!-- CARD 23: OFFER -->
+<section class="dark" id="s23"><div class="w">
+<span class="label rv">The Offer</span>
+<h2 class="rv">Everything here is yours to keep.</h2>
+<p class="rv sub">Use the diagnostic. Deploy the agency landing page. Run the scorecard as a lead magnet. Hand the 90-day roadmap to your Growth Lead on day one. No strings attached.</p>
+<p class="rv d1" style="margin-top:16px"><strong>If you want to go further:</strong></p>
+<ul class="ol rv d2" style="margin:10px 0 20px">
+<li>Full dual funnel infrastructure installation (every funnel stage covered)</li>
+<li>Segmented landing pages for agencies, founders, and in-house teams</li>
+<li>Klaviyo trial lifecycle built and optimised</li>
+<li>Google Search campaign setup and management</li>
+<li>PvP lead magnets for unaware traffic</li>
+<li>90 day hands on build with your team</li>
+</ul>
+<p class="rv d3" style="font-size:.85rem;color:var(--g4)">Investment: Let us discuss it on a call. I will show you the economics first.</p>
+</div></section>
+
+<!-- CARD 24: FINAL CTA -->
+<section class="dark" id="s24" style="padding-bottom:32px"><div class="w" style="text-align:center">
+<h2 class="rv">2 Options To Get Started</h2>
+<div class="ctg rv d1">
+<div class="ctc"><h3>Just Reply</h3><p>Tell me which asset stood out.</p><a class="btn b-gh" href="mailto:">Reply to Email</a></div>
+<div class="ctc"><h3>Book A Call</h3><p>I walk you through the three ideas. You keep everything either way.</p><a class="btn b-ne" href="https://cal.com/jean-m-8f4kbr/15min" target="_blank">Book 15 Minutes</a></div>
+</div>
+<p class="rv d2" style="margin-top:24px;font-size:1rem;line-height:1.6">Parker, PodPitch built $4M ARR on Meta ads and demo closes. The next $4M comes from three places: a trial that converts, an agency segment that pays multiples, and Google traffic that Podseeker is currently taking.</p>
+<p class="rv d3" style="margin-top:12px;font-size:1.05rem;font-weight:700">Read it. Then decide.</p>
+<p style="margin-top:16px;font-style:italic;font-size:.85rem;color:var(--g4)">Jean Mundabi Fala<br>MDB Growth Capital</p>
+<footer>Strategy and GTM research by Jean Mundabi Fala</footer>
+</div></section>
+
+<script>
+// Reveal on scroll
+const o=new IntersectionObserver(e=>{e.forEach(i=>{if(i.isIntersecting){i.target.classList.add('on');o.unobserve(i.target)}})},{threshold:.08,rootMargin:'0px 0px -20px 0px'});
+document.querySelectorAll('.rv').forEach(el=>o.observe(el));
+
+// Side nav scroll tracking
+const secs=document.querySelectorAll('section[id]');
+const dots=document.querySelectorAll('.sn a');
+const no=new IntersectionObserver(e=>{e.forEach(i=>{if(i.isIntersecting){dots.forEach(d=>d.classList.remove('ac'));const d=document.querySelector(`.sn a[href="#${i.target.id}"]`);if(d)d.classList.add('ac')}})},{threshold:.2,rootMargin:'-5% 0px -60% 0px'});
+secs.forEach(s=>no.observe(s));
+
+// FAQ accordion
+document.querySelectorAll('.fq-q').forEach(q=>{q.addEventListener('click',()=>{const f=q.parentElement,w=f.classList.contains('open');document.querySelectorAll('.fq').forEach(x=>x.classList.remove('open'));if(!w)f.classList.add('open')})});
+
+// Video embed (auto-detect when URL is changed from placeholder)
+const ve=document.getElementById('videoEmbed');
+const vu='VIDEO_URL_GOES_HERE';
+if(vu&&vu!=='VIDEO_URL_GOES_HERE'){
+let eu='';
+if(vu.includes('loom.com')){eu=`https://www.loom.com/embed/${vu.split('/').pop().split('?')[0]}`}
+else if(vu.includes('youtube.com')||vu.includes('youtu.be')){const id=vu.includes('youtu.be')?vu.split('/').pop():new URLSearchParams(new URL(vu).search).get('v');eu=`https://www.youtube.com/embed/${id}`}
+else if(vu.includes('vimeo.com')){eu=`https://player.vimeo.com/video/${vu.split('/').pop().split('?')[0]}`}
+else if(vu.includes('tella.tv')){eu=vu.replace('/video/','/embed/')}
+if(eu){ve.innerHTML=`<iframe src="${eu}" style="width:100%;height:100%;border:none;border-radius:12px" allowfullscreen></iframe>`}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Post-Booking Sequence Rewrite — PodPitch Audit Finding</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--or:#FF5924;--or-h:#e84d1e;--ne:#e7ff5a;
+--dk:#222b27;--dk-s:#2a3530;--wh:#fff;--of:#f9fafb;
+--g3:#d1d5db;--g4:#9ca3af;--g5:#6b7280;--g6:#4b5563;
+--red:#ef4444;--grn:#22c55e;--amb:#f59e0b;
+--f:'Outfit',system-ui,sans-serif;--mx:780px;
+}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;font-size:18px}
+body{font-family:var(--f);color:var(--dk);line-height:1.7;background:var(--of)}
+.w{max-width:var(--mx);margin:0 auto;padding:0 24px}
+@media(max-width:640px){.w{padding:0 16px}}
+
+/* Header */
+.hd{background:var(--dk);padding:40px 0 32px;border-bottom:3px solid var(--or)}
+.hd .label{font-size:.62rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:8px}
+.hd h1{font-size:clamp(1.5rem,3.5vw,2.1rem);font-weight:800;color:var(--wh);line-height:1.1;letter-spacing:-.02em;margin-bottom:10px}
+.hd .sub{font-size:.88rem;color:var(--g4);line-height:1.6;max-width:560px}
+.hd .meta{margin-top:20px;font-size:.72rem;color:var(--g5);display:flex;gap:20px;flex-wrap:wrap}
+.hd .meta span{display:flex;align-items:center;gap:6px}
+.hd .meta span::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--or);flex-shrink:0}
+
+/* Problem summary */
+.problem-bar{background:rgba(239,68,68,.07);border-left:4px solid var(--red);padding:20px 24px;margin:32px 0}
+.problem-bar h3{color:var(--red);font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+.problem-bar p{font-size:.88rem;color:var(--g6);margin-bottom:0;line-height:1.65}
+
+/* Enrichment section */
+.enrich{background:var(--dk);color:var(--wh);padding:32px;margin:0 0 40px;border-radius:10px}
+.enrich .label{font-size:.62rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ne);margin-bottom:10px}
+.enrich h2{font-size:1.1rem;font-weight:700;color:var(--wh);margin-bottom:14px}
+.flow{display:flex;flex-direction:column;gap:0}
+.flow-step{display:flex;gap:14px;align-items:flex-start;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.flow-step:last-child{border-bottom:0}
+.flow-num{width:24px;height:24px;min-width:24px;border-radius:50%;background:var(--or);color:var(--wh);display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;margin-top:2px}
+.flow-step p{font-size:.84rem;color:rgba(255,255,255,.75);margin:0;line-height:1.55}
+.flow-step strong{color:var(--wh)}
+.vs-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0 0}
+@media(max-width:600px){.vs-row{grid-template-columns:1fr}}
+.vs-box{padding:14px 16px;border-radius:8px;font-size:.82rem;line-height:1.55}
+.vs-box.bad{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:var(--g6)}
+.vs-box.good{background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);color:var(--g6)}
+.vs-box .vs-label{font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.vs-box.bad .vs-label{color:var(--red)}
+.vs-box.good .vs-label{color:var(--grn)}
+
+/* Email blocks */
+.email-section{background:var(--wh);border-radius:10px;padding:28px;margin-bottom:20px;border:1px solid #e5e7eb}
+.email-section .email-num{display:inline-flex;align-items:center;gap:8px;margin-bottom:14px}
+.email-section .email-num .n{width:26px;height:26px;border-radius:6px;background:var(--or);color:var(--wh);font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+.email-section .email-num .t{font-size:.72rem;font-weight:700;color:var(--g5);letter-spacing:.06em;text-transform:uppercase}
+.email-section h2{font-size:1rem;font-weight:700;color:var(--dk);margin-bottom:4px;line-height:1.3}
+.email-section .timing{font-size:.72rem;color:var(--g4);margin-bottom:18px}
+
+.col2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+@media(max-width:640px){.col2{grid-template-columns:1fr}}
+
+.email-box{border-radius:8px;padding:18px;font-size:.82rem;line-height:1.65}
+.email-box .eb-label{font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid rgba(0,0,0,.07)}
+.email-box.current{background:rgba(239,68,68,.04);border:1px solid rgba(239,68,68,.15)}
+.email-box.current .eb-label{color:var(--red)}
+.email-box.fixed{background:rgba(34,197,94,.04);border:1px solid rgba(34,197,94,.2)}
+.email-box.fixed .eb-label{color:var(--grn)}
+.email-box .subj{font-size:.75rem;font-weight:600;color:var(--g5);margin-bottom:8px}
+.email-box .subj span{color:var(--dk);font-weight:700}
+.email-box p{margin-bottom:8px;color:var(--g6)}
+.email-box p:last-child{margin-bottom:0}
+.email-box .whats-wrong{margin-top:12px;padding:10px 12px;background:rgba(239,68,68,.06);border-radius:6px;font-size:.78rem;color:var(--red);line-height:1.5}
+.email-box .whats-good{margin-top:12px;padding:10px 12px;background:rgba(34,197,94,.06);border-radius:6px;font-size:.78rem;color:#065f46;line-height:1.5}
+.missing-tag{display:inline-block;background:rgba(245,158,11,.1);color:var(--amb);font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:4px;letter-spacing:.05em;text-transform:uppercase;margin-bottom:10px}
+
+/* Qual gate */
+.qual{background:var(--dk);color:var(--wh);padding:28px;border-radius:10px;margin:32px 0}
+.qual .label{font-size:.62rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:8px}
+.qual h2{font-size:1rem;font-weight:700;color:var(--wh);margin-bottom:12px}
+.qual p{font-size:.84rem;color:rgba(255,255,255,.75);margin-bottom:10px;line-height:1.6}
+.qual-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+@media(max-width:500px){.qual-fields{grid-template-columns:1fr}}
+.qf{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:14px 16px}
+.qf .qf-label{font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g4);margin-bottom:4px}
+.qf p{font-size:.82rem;color:rgba(255,255,255,.7);margin:0}
+.qf-why{font-size:.78rem;color:rgba(255,255,255,.5);margin-top:12px;line-height:1.55;font-style:italic}
+
+/* Summary table */
+.sum-table{width:100%;border-collapse:collapse;font-size:.8rem;margin:20px 0}
+.sum-table th{text-align:left;padding:9px 12px;background:var(--or);color:var(--wh);font-weight:600;font-size:.68rem;letter-spacing:.04em;text-transform:uppercase}
+.sum-table th:first-child{border-radius:6px 0 0 0}.sum-table th:last-child{border-radius:0 6px 0 0}
+.sum-table td{padding:9px 12px;border-bottom:1px solid #e5e7eb;vertical-align:top}
+.sum-table tr:nth-child(even){background:#f9fafb}
+.bad-t{color:var(--red);font-weight:600}
+.good-t{color:var(--grn);font-weight:600}
+
+/* Footer */
+footer{padding:32px 0;text-align:center;font-size:.75rem;color:var(--g4);border-top:1px solid #e5e7eb;margin-top:48px}
+
+/* Spacer */
+main{padding:32px 0 0}
+section.block{margin-bottom:32px}
+</style>
+</head>
+<body>
+
+<div class="hd">
+  <div class="w">
+    <div class="label">Audit Finding — Post-Booking Lifecycle</div>
+    <h1>The Leak Nobody's Talking About</h1>
+    <p class="sub">The ads work. The landing page converts. Parker closes. But between "demo booked" and "demo attended" there are four structural failures that are costing PodPitch show rate, conversion rate, and Parker's time.</p>
+    <div class="meta">
+      <span>5 emails audited</span>
+      <span>1 missing email identified</span>
+      <span>1 qualification gate missing</span>
+      <span>Jean Mundabi Fala — Growth Lead Candidate</span>
+    </div>
+  </div>
+</div>
+
+<main>
+<div class="w">
+
+  <!-- THE ENRICHMENT LAYER -->
+  <div class="enrich" style="margin-top:32px">
+    <div class="label">The Root Cause</div>
+    <h2>The SDR goes into every demo blind. The prospect is asked to fix that.</h2>
+    <div class="vs-row">
+      <div class="vs-box bad">
+        <div class="vs-label">Current Flow</div>
+        Prospect books → generic confirmation → homework form (paste your own bio) → Lazar goes in blind → prospect no-shows because they forgot why they booked
+      </div>
+      <div class="vs-box good">
+        <div class="vs-label">Fixed Flow</div>
+        Prospect books → email captured → Clay enrichment runs automatically → Lazar gets a brief → segment-specific confirmation email → prospect feels known → show rate goes up
+      </div>
+    </div>
+    <div style="margin-top:18px">
+      <div class="label" style="color:var(--g4);margin-bottom:8px">The Enrichment Layer</div>
+      <div class="flow">
+        <div class="flow-step"><div class="flow-num">1</div><p>Booking form captures: <strong>first name, last name, email, company name</strong> (two extra fields, added before the Cal.com embed)</p></div>
+        <div class="flow-step"><div class="flow-num">2</div><p>On booking: <strong>Clay or Apollo lookup triggered automatically</strong> on email and domain — returns title, company size, LinkedIn, industry</p></div>
+        <div class="flow-step"><div class="flow-num">3</div><p>Prospect <strong>auto-assigned to a segment:</strong> Agency (managing 3 or more clients) / Founder / In-house PR team</p></div>
+        <div class="flow-step"><div class="flow-num">4</div><p><strong>SDR brief sent to Lazar:</strong> who they are, estimated use case, LTV tier, one personalisation hook</p></div>
+        <div class="flow-step"><div class="flow-num">5</div><p>Confirmation email <strong>pulled from segment-specific template.</strong> Prospect reads: "I've done my homework on you." Not: "Please do our homework for us."</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EMAIL 1 -->
+  <section class="block">
+  <div class="email-section">
+    <div class="email-num"><div class="n">1</div><div class="t">Pre-Call Email — Sent at Booking</div></div>
+    <h2>The confirmation that leads with a threat</h2>
+    <div class="timing">Sent immediately after booking</div>
+    <div class="col2">
+      <div class="email-box current">
+        <div class="eb-label">Current</div>
+        <div class="subj">Subject: <span>Why You Should Cancel Before Monday, Munya</span></div>
+        <p>"Munya: if you think you might not be able to make the Google Meet on Monday, please reschedule ahead of time. People who miss the call without notice are not eligible to sign up for PodPitch."</p>
+        <p>Here are reasons you might want to cancel our meeting: 1. You're not ready to get press right away. 2. You think PodPitch costs under $100/mo...</p>
+        <div class="whats-wrong">Opens with a threat. Loss frame. Makes the prospect feel tested before they've seen a single feature. A warm lead just went cold.</div>
+      </div>
+      <div class="email-box fixed">
+        <div class="eb-label">Rewrite</div>
+        <div class="subj">Subject: <span>Your demo Monday — here's what we'll cover, Munya</span></div>
+        <p>Hey Munya,</p>
+        <p>Looking forward to Monday.</p>
+        <p>I had a look at what you're building before our call. Based on that, I'll focus on how [founders in your space] are getting booked on [relevant podcast type] right now — and what their first 30 days of results look like.</p>
+        <p>You don't need to prepare anything. Just show up.</p>
+        <p>If something comes up, reschedule here: [link]. No problem.</p>
+        <p>See you Monday.<br>Lazar</p>
+        <div class="whats-good">Warmth instead of threat. Signals research was done. Removes all friction. Reschedule link framed as low-pressure, not punitive.</div>
+      </div>
+    </div>
+  </div>
+  </section>
+
+  <!-- EMAIL 1B — MISSING -->
+  <section class="block">
+  <div class="email-section" style="border-color:rgba(245,158,11,.3)">
+    <div class="email-num"><div class="n" style="background:var(--amb)">!</div><div class="t" style="color:var(--amb)">Missing Email — 24 Hours Before the Call</div></div>
+    <h2>The highest-leverage email that doesn't exist</h2>
+    <div class="timing">Should be sent 24 hours before the demo</div>
+    <span class="missing-tag">Currently Missing From Sequence</span>
+    <div class="col2">
+      <div class="email-box current" style="border-color:rgba(245,158,11,.2);background:rgba(245,158,11,.04)">
+        <div class="eb-label" style="color:var(--amb)">What Happens Now</div>
+        <p>Nothing. The sequence jumps from the booking confirmation directly to the no-show recovery email.</p>
+        <p>A prospect who booked 5 days ago and has since gone cold receives zero communication before the call. No reminder. No anticipation. No reason to still show up.</p>
+        <div class="whats-wrong">The 24-hour reminder is the single highest-leverage touchpoint in the demo lifecycle. It is the last chance to re-confirm intent. It does not exist.</div>
+      </div>
+      <div class="email-box fixed">
+        <div class="eb-label">New Email to Add</div>
+        <div class="subj">Subject: <span>Tomorrow at [time] — one thing to know first</span></div>
+        <p>Hey Munya,</p>
+        <p>Quick note before tomorrow.</p>
+        <p>[Founders in your position] get the most out of the demo when we focus on one thing: the first 10 podcast interviews. Not a full strategy — just the first 10.</p>
+        <p>That's what we'll build together tomorrow in real time. By the end of the call you'll have a list, a pitch angle, and a realistic timeline.</p>
+        <p>See you at [time].<br>Lazar</p>
+        <p style="font-size:.78rem;color:var(--g5)">P.S. Here's 90 seconds from [similar user] on what their first 30 days looked like: [link]</p>
+        <div class="whats-good">Creates anticipation for a specific outcome. Social proof from someone in the same situation. Makes the prospect want to attend — not just remember to.</div>
+      </div>
+    </div>
+  </div>
+  </section>
+
+  <!-- EMAIL 2 -->
+  <section class="block">
+  <div class="email-section">
+    <div class="email-num"><div class="n">2</div><div class="t">No-Show Recovery — Email 1</div></div>
+    <h2>The missed call email that could be sent to anyone</h2>
+    <div class="timing">Sent same day, ~30 minutes after missed call</div>
+    <div class="col2">
+      <div class="email-box current">
+        <div class="eb-label">Current</div>
+        <div class="subj">Subject: <span>(no subject)</span></div>
+        <p>"Am bummed we didn't get to connect today — I imagine something came up, no worries at all!"</p>
+        <p>"With the time back, I pulled some stats from our users: Landing 6+ podcast interviews monthly (3x more than traditional outreach). Saving 13+ hours weekly. Generating $22K+ in advertising value."</p>
+        <div class="whats-wrong">Stats apply to everyone. "I imagine something came up" is filler. "With the time back I pulled some stats" reads like an automated trigger — because it is.</div>
+      </div>
+      <div class="email-box fixed">
+        <div class="eb-label">Rewrite</div>
+        <div class="subj">Subject: <span>Missed you today, Munya</span></div>
+        <p>Hey Munya,</p>
+        <p>Something came up — happens to everyone.</p>
+        <p>Before our call I looked at [their company / LinkedIn]. You're at the stage where [specific observation about their situation]. That's usually where PodPitch creates the most obvious before/after.</p>
+        <p>Worth rescheduling?</p>
+        <p>[Single reschedule link]</p>
+        <p>Lazar</p>
+        <div class="whats-good">One specific observation about their actual situation instead of generic stats. One CTA. Proves research was done — gives the prospect a reason to believe the demo will be worth their time.</div>
+      </div>
+    </div>
+  </div>
+  </section>
+
+  <!-- EMAIL 3 -->
+  <section class="block">
+  <div class="email-section">
+    <div class="email-num"><div class="n">3</div><div class="t">No-Show Recovery — Email 2</div></div>
+    <h2>The feature list that says nothing about the person</h2>
+    <div class="timing">Sent next day</div>
+    <div class="col2">
+      <div class="email-box current">
+        <div class="eb-label">Current</div>
+        <div class="subj">Subject: <span>(no subject)</span></div>
+        <p>"Hey Munya, Still want to see how PodPitch: Build targeted podcast lists in under 2 mins (vs. 3 hours manually). Generates personalized pitches for each show instantly. Tracks and analyzes pitch effectiveness."</p>
+        <p>"If scaling your podcast outreach efforts is still relevant, click here to re-schedule!"</p>
+        <div class="whats-wrong">Feature list. No reference to Munya's situation. "If scaling your podcast outreach efforts is still relevant" is passive. Could be sent to any of PodPitch's 3,091 users.</div>
+      </div>
+      <div class="email-box fixed">
+        <div class="eb-label">Rewrite</div>
+        <div class="subj">Subject: <span>One thing I noticed, Munya</span></div>
+        <p>Hey Munya,</p>
+        <p>I checked [their LinkedIn / company] while prepping for our call.</p>
+        <p>[Specific finding — e.g., "You've published consistently on LinkedIn but I don't see podcast presence. That's where the biggest distribution gap usually is."]</p>
+        <p>That's the gap [similar user] closed in 6 weeks — went from 0 to 7 confirmed bookings.</p>
+        <p>If that gap is real for you: [reschedule link]</p>
+        <p>Lazar</p>
+        <div class="whats-good">Leads with a specific finding from their situation. Uses a real before/after from a similar user. Conditional CTA — "if that gap is real for you" — creates higher-quality replies.</div>
+      </div>
+    </div>
+  </div>
+  </section>
+
+  <!-- EMAIL 4 -->
+  <section class="block">
+  <div class="email-section">
+    <div class="email-num"><div class="n">4</div><div class="t">No-Show Recovery — Email 3</div></div>
+    <h2>The same ask, repeated a third time</h2>
+    <div class="timing">Sent 4 days after missed call</div>
+    <div class="col2">
+      <div class="email-box current">
+        <div class="eb-label">Current</div>
+        <div class="subj">Subject: <span>(no subject)</span></div>
+        <p>"Hey Munya, On average, users save 10-30 hours a week by using PodPitch to generate pitches for them."</p>
+        <p>"If you still want a personalized demo, grab a new time here. If this isn't relevant right now, is there a better time I should follow-up?"</p>
+        <div class="whats-wrong">Same stats for the third email. No escalation. "If this isn't relevant right now, is there a better time I should follow-up?" gives an easy exit without offering an easier entry point.</div>
+      </div>
+      <div class="email-box fixed">
+        <div class="eb-label">Rewrite</div>
+        <div class="subj">Subject: <span>Lower-friction option, Munya</span></div>
+        <p>Hey Munya,</p>
+        <p>If scheduling a call is the blocker — no problem.</p>
+        <p>You can start a 2-week trial now and explore at your own pace: [trial link]</p>
+        <p>If you'd still prefer the demo first, the calendar's open: [reschedule link]</p>
+        <p>Either works.</p>
+        <p>Lazar</p>
+        <div class="whats-good">Offers a lower-friction alternative (trial) instead of the same high-friction ask three times. Short. Two options. Prospects who skip the demo and start the trial still enter the conversion funnel.</div>
+      </div>
+    </div>
+  </div>
+  </section>
+
+  <!-- QUALIFICATION GATE -->
+  <div class="qual">
+    <div class="label">Landing Page Fix</div>
+    <h2>The qualification gate that should exist before the booking CTA</h2>
+    <p>Right now anyone can book. Parker closes. That means demo time is spent on people who cannot afford the product or are not ready to buy. Two fields added before the Cal.com embed fixes this without killing conversion.</p>
+    <div class="qual-fields">
+      <div class="qf">
+        <div class="qf-label">Field 1</div>
+        <p>Who are you booking a demo for? — Yourself / A client / My team</p>
+      </div>
+      <div class="qf">
+        <div class="qf-label">Field 2</div>
+        <p>What's your company or brand name?</p>
+      </div>
+    </div>
+    <p class="qf-why">Two fields. Gives the SDR a company name for enrichment even if the email is a personal Gmail. Segments the prospect before the call. Filters window-shoppers. Signals to the prospect that the demo will be personalised — which increases show rate on its own.</p>
+  </div>
+
+  <!-- SUMMARY TABLE -->
+  <section class="block" style="margin-top:32px">
+    <h2 style="font-size:1rem;font-weight:700;margin-bottom:14px;color:var(--dk)">What the Fixed Sequence Achieves</h2>
+    <table class="sum-table">
+      <thead><tr><th>Problem</th><th>Current</th><th>Fixed</th></tr></thead>
+      <tbody>
+        <tr><td>Prospect feels welcomed</td><td class="bad-t">No — threatened</td><td class="good-t">Yes — researched and expected</td></tr>
+        <tr><td>SDR has a brief before the call</td><td class="bad-t">No — goes in blind</td><td class="good-t">Yes — auto-enrichment on booking</td></tr>
+        <tr><td>Pre-call friction</td><td class="bad-t">High — homework form</td><td class="good-t">Zero — prospect just shows up</td></tr>
+        <tr><td>24-hour reminder</td><td class="bad-t">Missing</td><td class="good-t">Added — re-warms before call</td></tr>
+        <tr><td>No-show emails personalised</td><td class="bad-t">No — same stats to everyone</td><td class="good-t">Yes — specific to their situation</td></tr>
+        <tr><td>Easier path offered after 3 no-shows</td><td class="bad-t">No — same ask repeated 3 times</td><td class="good-t">Yes — trial link as lower-friction option</td></tr>
+        <tr><td>Qualification before booking</td><td class="bad-t">None — anyone books</td><td class="good-t">2 fields before Cal.com embed</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+</div>
+</main>
+
+<footer>
+  <div class="w">
+    Audit finding by Jean Mundabi Fala — AI-Native Growth Lead Candidate · PodPitch<br>
+    Based on direct experience going through the PodPitch booking and no-show recovery flow · <a href="mailto:jeanmundabi@gmail.com" style="color:var(--or)">jeanmundabi@gmail.com</a>
+  </div>
+</footer>
+
+</body>
+</html>

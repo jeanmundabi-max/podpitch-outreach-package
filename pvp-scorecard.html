@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Podcast Pitch Readiness Scorecard — PodPitch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--orange:#FF5924;--orange-h:#e84d1e;--neon:#e7ff5a;--neon-dim:rgba(231,255,90,.1);
+--dark:#222b27;--dark-s:#2a3530;--wh:#fff;--off:#f9fafb;
+--g3:#d1d5db;--g4:#9ca3af;--g5:#6b7280;--g6:#4b5563;
+--red:#ef4444;--green:#22c55e;--amber:#f59e0b;
+--f:'Outfit',system-ui,sans-serif;
+}
+html{-webkit-font-smoothing:antialiased;font-size:18px}
+body{font-family:var(--f);color:var(--dark);line-height:1.6;background:var(--wh);min-height:100dvh;display:flex;flex-direction:column}
+
+.wrap{max-width:640px;margin:0 auto;padding:0 20px;width:100%}
+
+/* Header */
+.hdr{background:var(--dark);padding:40px 0;text-align:center}
+.hdr .logo{font-weight:800;font-size:1rem;color:var(--wh);margin-bottom:14px}
+.hdr .logo span{color:var(--neon)}
+.hdr h1{font-size:clamp(1.4rem,3.5vw,1.9rem);font-weight:800;color:var(--wh);letter-spacing:-.03em;line-height:1.1;margin-bottom:8px}
+.hdr p{font-size:.88rem;color:var(--g4);max-width:460px;margin:0 auto}
+
+/* Progress */
+.progress-wrap{padding:20px 0;background:var(--wh);border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-index:10}
+.progress-bar{height:6px;background:#e5e7eb;border-radius:100px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--orange),#ff7a50);border-radius:100px;transition:width .4s ease}
+.progress-text{display:flex;justify-content:space-between;margin-top:8px;font-size:.72rem;color:var(--g4);font-weight:500}
+
+/* Question Card */
+.q-section{padding:32px 0;flex:1}
+.q-card{background:var(--wh);border:1px solid #e5e7eb;border-radius:12px;padding:28px;margin-bottom:20px;display:none}
+.q-card.active{display:block;animation:fadeUp .3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.q-num{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin-bottom:10px}
+.q-text{font-size:1.05rem;font-weight:700;color:var(--dark);line-height:1.3;margin-bottom:20px}
+.q-help{font-size:.78rem;color:var(--g5);margin-bottom:16px;line-height:1.5;font-style:italic}
+
+/* Options */
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{padding:14px 18px;border:1.5px solid #e5e7eb;border-radius:8px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:12px;font-size:.88rem;font-weight:500}
+.opt:hover{border-color:var(--dark);background:var(--off)}
+.opt.selected{border-color:var(--orange);background:rgba(255,89,36,.04)}
+.opt-dot{width:18px;height:18px;min-width:18px;border-radius:50%;border:2px solid #e5e7eb;transition:all .15s;display:flex;align-items:center;justify-content:center}
+.opt.selected .opt-dot{border-color:var(--orange);background:var(--orange)}
+.opt.selected .opt-dot::after{content:'';width:6px;height:6px;border-radius:50%;background:var(--wh)}
+.opt-label{flex:1}
+.opt-score{font-size:.7rem;font-weight:600;color:var(--g4);padding:2px 8px;border-radius:4px;background:var(--off)}
+/* Match landing page nav style */
+.progress-wrap{background:var(--wh)}
+
+/* Navigation */
+.q-nav{display:flex;justify-content:space-between;margin-top:20px}
+.btn{padding:12px 24px;border-radius:8px;font:600 .85rem/1 var(--f);border:0;cursor:pointer;transition:all .15s}
+.btn:active{transform:scale(.97)}
+.btn-next{background:var(--orange);color:var(--wh)}.btn-next:hover{background:var(--orange-h)}
+.btn-next:disabled{background:var(--g3);cursor:not-allowed}
+.btn-back{background:transparent;color:var(--g5);border:1.5px solid #e5e7eb}.btn-back:hover{border-color:var(--dark)}
+
+/* Results */
+.results{display:none;padding:32px 0}
+.results.show{display:block;animation:fadeUp .4s ease}
+.r-card{background:var(--wh);border:1px solid #e5e7eb;border-radius:12px;padding:32px;text-align:center;margin-bottom:20px}
+.r-score{font-size:3.2rem;font-weight:800;letter-spacing:-.04em;line-height:1}
+.r-score.high{color:var(--green)}.r-score.mid{color:var(--amber)}.r-score.low{color:var(--red)}
+.r-label{font-size:.88rem;font-weight:600;color:var(--g5);margin-top:6px}
+.r-verdict{font-size:1.1rem;font-weight:700;color:var(--dark);margin-top:16px}
+.r-desc{font-size:.88rem;color:var(--g5);margin-top:6px;line-height:1.6;max-width:440px;margin-left:auto;margin-right:auto}
+
+/* Breakdown */
+.breakdown{background:var(--wh);border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;margin-bottom:20px}
+.bd-row{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid #f3f4f6}
+.bd-row:last-child{border-bottom:0}
+.bd-cat{font-size:.82rem;font-weight:600;color:var(--dark)}
+.bd-score{font-size:.82rem;font-weight:700;padding:3px 10px;border-radius:4px}
+.bd-high{background:rgba(34,197,94,.08);color:var(--green)}
+.bd-mid{background:rgba(245,158,11,.08);color:var(--amber)}
+.bd-low{background:rgba(239,68,68,.08);color:var(--red)}
+
+/* Recommendations */
+.recs{background:var(--wh);border:1px solid #e5e7eb;border-radius:12px;padding:24px;margin-bottom:20px}
+.recs h3{font-size:.92rem;font-weight:700;color:var(--dark);margin-bottom:14px}
+.rec-item{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #f3f4f6;font-size:.82rem;color:var(--g6);line-height:1.5}
+.rec-item:last-child{border-bottom:0}
+.rec-icon{width:20px;height:20px;min-width:20px;border-radius:5px;background:var(--neon-dim);display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:800;color:var(--dark)}
+
+/* Email Gate */
+.gate{background:var(--dark);border-radius:12px;padding:32px;text-align:center;margin-bottom:20px}
+.gate h3{font-size:1rem;font-weight:700;color:var(--wh);margin-bottom:6px}
+.gate p{font-size:.82rem;color:var(--g4);margin-bottom:16px}
+.gate-form{display:flex;gap:8px;max-width:400px;margin:0 auto}
+.gate-input{flex:1;padding:12px 14px;border-radius:8px;border:1.5px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:var(--wh);font:500 .85rem/1 var(--f);outline:none}
+.gate-input:focus{border-color:var(--neon)}
+.gate-input::placeholder{color:var(--g4)}
+.gate-btn{padding:12px 20px;border-radius:8px;background:var(--neon);color:var(--dark);font:700 .85rem/1 var(--f);border:0;cursor:pointer}
+.gate-btn:hover{background:#d4f040}
+.gate-note{font-size:.7rem;color:var(--g4);margin-top:10px}
+
+/* Footer */
+footer{padding:20px 0;text-align:center}
+footer p{font-size:.68rem;color:var(--g4)}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hdr"><div class="wrap">
+<div class="logo">Pod<span>Pitch</span></div>
+<h1>Podcast Pitch Readiness Scorecard</h1>
+<p>Rate your client's podcast-readiness in 2 minutes. Get a score, a breakdown, and specific recommendations.</p>
+</div></div>
+
+<!-- PROGRESS -->
+<div class="progress-wrap"><div class="wrap">
+<div class="progress-bar"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
+<div class="progress-text"><span id="progLabel">Question 1 of 8</span><span id="progPct">0%</span></div>
+</div></div>
+
+<!-- QUESTIONS -->
+<section class="q-section"><div class="wrap">
+
+<div class="q-card active" data-q="1">
+<div class="q-num">Question 1 of 8</div>
+<div class="q-text">How many podcast interviews has your client done in the last 12 months?</div>
+<div class="opts">
+<div class="opt" data-val="1"><span class="opt-dot"></span><span class="opt-label">None</span></div>
+<div class="opt" data-val="2"><span class="opt-dot"></span><span class="opt-label">1 to 5</span></div>
+<div class="opt" data-val="3"><span class="opt-dot"></span><span class="opt-label">6 to 15</span></div>
+<div class="opt" data-val="4"><span class="opt-dot"></span><span class="opt-label">16+</span></div>
+</div>
+<div class="q-nav"><button class="btn btn-back" disabled>Back</button><button class="btn btn-next" disabled>Next</button></div>
+</div>
+
+<div class="q-card" data-q="2">
+<div class="q-num">Question 2 of 8</div>
+<div class="q-text">Does your client have a clear "guest profile" — a one-sheet with their bio, topics, and target audience?</div>
+<div class="q-help">A guest profile tells podcast hosts exactly why this person is worth interviewing and what their audience will learn.</div>
+<div class="opts">
+<div class="opt" data-val="1"><span class="opt-dot"></span><span class="opt-label">No guest profile exists</span></div>
+<div class="opt" data-val="2"><span class="opt-dot"></span><span class="opt-label">They have a basic bio but nothing structured</span></div>
+<div class="opt" data-val="3"><span class="opt-dot"></span><span class="opt-label">They have a professional one-sheet</span></div>
+<div class="opt" data-val="4"><span class="opt-dot"></span><span class="opt-label">They have a polished media kit with topics, past appearances, and press coverage</span></div>
+</div>
+<div class="q-nav"><button class="btn btn-back">Back</button><button class="btn btn-next" disabled>Next</button></div>
+</div>
+
+<div class="q-card" data-q="3">
+<div class="q-num">Question 3 of 8</div>
+<div class="q-text">How specific can your client be about the topics they want to discuss on podcasts?</div>
+<div class="opts">
+<div class="opt" data-val="1"><span class="opt-dot"></span><span class="opt-label">"I can talk about anything in my industry"</span></div>
+<div class="opt" data-val="2"><span class="opt-dot"></span><span class="opt-label">They have 2 to 3 broad themes</span></div>
+<div class="opt" data-val="3"><span class="opt-dot"></span><span class="opt-label">They have 5+ specific episode angles with stories and data</span></div>
+<div class="opt" data-val="4"><span class="opt-dot"></span><span class="opt-label">They have a content calendar with podcast-specific angles tied to business goals</span></div>
+</div>
+<div class="q-nav"><button class="btn btn-back">Back</button><button class="btn btn-next" disabled>Next</button></div>
+</div>
+
+<div class="q-card" data-q="4">
+<div class="q-num">Question 4 of 8</div>
+<div class="q-text">How many podcasts in your client's niche can you name right now?</div>
+<div class="q-help">This measures how well you know the media landscape for this client's target audience.</div>
+<div class="opts">
+<div class="opt" data-val="1"><span class="opt-dot"></span><span class="opt-label">Less than 5</span></div>
+<div class="opt" data-val="2"><span class="opt-dot"></span><span class="opt-label">5 to 20</span></div>
+<div class="opt" data-val="3"><span class="opt-dot"></span><span class="opt-label">20 to 50</span></div>
+<div class="opt" data-val="4"><span class="opt-dot"></span><span class="opt-label">50+ (I have a database or tool for this)</span></div>
+</div>
+<div class="q-nav"><button class="btn btn-back">Back</button><button class="btn btn-next" disabled>Next</button></div>
+</div>
+
+<div class="q-card" data-q="5">
+<div class="q-num">Question 5 of 8</div>
+<div class="q-text">How are you currently pitching podcast hosts?</div>
+<div class="opts">
+<div class="opt" data-val="1"><span class="opt-dot"></span><span class="opt-label">We are not pitching yet</span></div>
+<div class="opt" data-val="2"><span class="opt-dot"></span><span class="opt-label">Manual emails one at a time</span></div>
+<div class="opt" data-val="3"><span class="opt-dot"></span><span class="opt-label">Templates with some personalisation</span></div>
+<div class="opt" data-val="4"><span class="opt-dot"></span><span class="opt-label">Personalised AI-generated pitches at scale</span></div>
+</div>
+<div class="q-nav"><button class="btn btn-back">Back</button><button class="btn btn-next" disabled>Next</button></div>
+</div>
+
+<div class="q-card" data-q="6">
+<div class="q-num">Question 6 of 8</div>
+<div class="q-text">What is your current reply rate from podcast hosts?</div>
+<div class="opts">
+<div class="opt" data-val="1"><span class="opt-dot"></span><span class="opt-label">No idea / not tracking</span></div>
+<div class="opt" data-val="2"><span class="opt-dot"></span><span class="opt-label">Under 5%</span></div>
+<div class="opt" data-val="3"><span class="opt-dot"></span><span class="opt-label">5 to 15%</span></div>
+<div class="opt" data-val="4"><span class="opt-dot"></span><span class="opt-label">Above 15%</span></div>
+</div>
+<div class="q-nav"><button class="btn btn-back">Back</button><button class="btn btn-next" disabled>Next</button></div>
+</div>
+
+<div class="q-card" data-q="7">
+<div class="q-num">Question 7 of 8</div>
+<div class="q-text">Does your client have a way to measure ROI from podcast appearances?</div>
+<div class="q-help">Website traffic, lead attribution, brand search volume, social mentions, direct inquiries.</div>
+<div class="opts">
+<div class="opt" data-val="1"><span class="opt-dot"></span><span class="opt-label">No tracking at all</span></div>
+<div class="opt" data-val="2"><span class="opt-dot"></span><span class="opt-label">We track basic metrics (website visits after an episode)</span></div>
+<div class="opt" data-val="3"><span class="opt-dot"></span><span class="opt-label">We track leads and attribute them to specific appearances</span></div>
+<div class="opt" data-val="4"><span class="opt-dot"></span><span class="opt-label">Full attribution: we know which episodes drove revenue</span></div>
+</div>
+<div class="q-nav"><button class="btn btn-back">Back</button><button class="btn btn-next" disabled>Next</button></div>
+</div>
+
+<div class="q-card" data-q="8">
+<div class="q-num">Question 8 of 8</div>
+<div class="q-text">How many hours per week does your team spend on podcast outreach for this client?</div>
+<div class="opts">
+<div class="opt" data-val="4"><span class="opt-dot"></span><span class="opt-label">Less than 1 hour (automated or not doing it)</span></div>
+<div class="opt" data-val="3"><span class="opt-dot"></span><span class="opt-label">1 to 3 hours</span></div>
+<div class="opt" data-val="2"><span class="opt-dot"></span><span class="opt-label">3 to 8 hours</span></div>
+<div class="opt" data-val="1"><span class="opt-dot"></span><span class="opt-label">8+ hours</span></div>
+</div>
+<div class="q-nav"><button class="btn btn-back">Back</button><button class="btn btn-next">See Results</button></div>
+</div>
+
+</div></section>
+
+<!-- RESULTS -->
+<section class="results" id="results"><div class="wrap">
+
+<div class="r-card" id="rCard">
+<div class="r-score" id="rScore">--</div>
+<div class="r-label">out of 32</div>
+<div class="r-verdict" id="rVerdict"></div>
+<div class="r-desc" id="rDesc"></div>
+</div>
+
+<div class="breakdown" id="breakdown"></div>
+
+<div class="recs" id="recs">
+<h3>Your top recommendations</h3>
+</div>
+
+<!-- EMAIL GATE -->
+<div class="gate">
+<h3>Get the full Podcast PR Playbook</h3>
+<p>We will send you the complete agency playbook: media list templates, pitch frameworks, and booking rate benchmarks. Free.</p>
+<div class="gate-form">
+<input type="email" class="gate-input" placeholder="Your work email" id="gateEmail">
+<button class="gate-btn" id="gateBtn">Send Playbook</button>
+</div>
+<div class="gate-note">No spam. Unsubscribe anytime.</div>
+</div>
+
+</div></section>
+
+<!-- FOOTER -->
+<footer><div class="wrap">
+<p>Podcast Pitch Readiness Scorecard by PodPitch | Lead magnet concept by MDB Growth Capital</p>
+</div></footer>
+
+<script>
+const cards=document.querySelectorAll('.q-card');
+const fill=document.getElementById('progFill');
+const progLabel=document.getElementById('progLabel');
+const progPct=document.getElementById('progPct');
+let current=0;
+const answers=new Array(8).fill(0);
+const categories=['Experience','Guest Profile','Topic Clarity','Media Knowledge','Pitch Method','Reply Rate','ROI Tracking','Time Efficiency'];
+
+// Option selection
+document.querySelectorAll('.opt').forEach(opt=>{
+  opt.addEventListener('click',()=>{
+    const card=opt.closest('.q-card');
+    card.querySelectorAll('.opt').forEach(o=>o.classList.remove('selected'));
+    opt.classList.add('selected');
+    card.querySelector('.btn-next').disabled=false;
+    const qi=parseInt(card.dataset.q)-1;
+    answers[qi]=parseInt(opt.dataset.val);
+  });
+});
+
+// Navigation
+document.querySelectorAll('.btn-next').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    if(btn.disabled)return;
+    if(current<7){
+      cards[current].classList.remove('active');
+      current++;
+      cards[current].classList.add('active');
+      updateProgress();
+    }else{
+      showResults();
+    }
+  });
+});
+
+document.querySelectorAll('.btn-back').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    if(current>0){
+      cards[current].classList.remove('active');
+      current--;
+      cards[current].classList.add('active');
+      updateProgress();
+    }
+  });
+});
+
+function updateProgress(){
+  const pct=Math.round(((current)/8)*100);
+  fill.style.width=pct+'%';
+  progLabel.textContent=`Question ${current+1} of 8`;
+  progPct.textContent=pct+'%';
+}
+
+function showResults(){
+  document.querySelector('.q-section').style.display='none';
+  document.querySelector('.progress-wrap').style.display='none';
+  const r=document.getElementById('results');
+  r.classList.add('show');
+
+  const total=answers.reduce((a,b)=>a+b,0);
+  const scoreEl=document.getElementById('rScore');
+  const verdictEl=document.getElementById('rVerdict');
+  const descEl=document.getElementById('rDesc');
+
+  scoreEl.textContent=total;
+
+  let verdict,desc,cls;
+  if(total>=28){
+    verdict='Podcast PR Ready';
+    desc='Your client is well-positioned for a high-volume podcast outreach campaign. The foundation is strong. Now it is about scaling volume and improving booking rates.';
+    cls='high';
+  }else if(total>=20){
+    verdict='Almost Ready — A Few Gaps to Close';
+    desc='Your client has good fundamentals but there are 2 to 3 areas holding back booking rates. Fix those and you will see significantly more interviews per month.';
+    cls='mid';
+  }else if(total>=12){
+    verdict='Needs Preparation Before Scaling';
+    desc='Pitching at volume right now would waste time. Focus on building the guest profile, defining specific topics, and mapping the podcast landscape first. Then scale.';
+    cls='mid';
+  }else{
+    verdict='Not Ready for Podcast Outreach Yet';
+    desc='Your client needs foundational work before podcast PR makes sense. Start with a guest profile, 5 specific episode angles, and a target list of 50 podcasts.';
+    cls='low';
+  }
+
+  scoreEl.className='r-score '+cls;
+  verdictEl.textContent=verdict;
+  descEl.textContent=desc;
+
+  // Breakdown
+  const bd=document.getElementById('breakdown');
+  bd.innerHTML='';
+  answers.forEach((a,i)=>{
+    const row=document.createElement('div');
+    row.className='bd-row';
+    let scoreCls=a>=3?'bd-high':a===2?'bd-mid':'bd-low';
+    let scoreLabel=a>=3?'Strong':a===2?'OK':'Weak';
+    row.innerHTML=`<span class="bd-cat">${categories[i]}</span><span class="bd-score ${scoreCls}">${scoreLabel} (${a}/4)</span>`;
+    bd.appendChild(row);
+  });
+
+  // Recommendations
+  const recsEl=document.getElementById('recs');
+  const weakAreas=answers.map((a,i)=>({cat:categories[i],score:a,idx:i})).filter(x=>x.score<=2).sort((a,b)=>a.score-b.score);
+
+  const recTexts={
+    0:'Build a track record with 3 to 5 "warm-up" podcast appearances on smaller shows before targeting tier-1 podcasts.',
+    1:'Create a professional guest profile (media one-sheet) with bio, 5 episode angles, past appearances, and a professional headshot.',
+    2:'Develop 5 specific episode angles with data points, stories, and clear audience takeaways. "I can talk about anything" does not book podcasts.',
+    3:'Build a target media list of 50+ podcasts in your client\'s niche. Include show size, host name, booking contact, and relevance score.',
+    4:'Move from manual pitching to personalised outreach at scale. Tools like PodPitch write pitches in your client\'s voice and send from their email.',
+    5:'Your reply rates suggest the pitches need work. Focus on personalisation: reference the host\'s recent episodes and explain why your client fits THEIR audience.',
+    6:'Set up basic podcast ROI tracking: UTM links in show notes, branded search monitoring, and a "how did you hear about us" field on intake forms.',
+    7:'You are spending too many hours on manual outreach. Automate the research and pitch writing so your team focuses on relationship building, not email drafting.'
+  };
+
+  let recsHTML='<h3>Your top recommendations</h3>';
+  if(weakAreas.length===0){
+    recsHTML+='<div class="rec-item"><span class="rec-icon">+</span><span>No weak areas. Focus on increasing volume and optimising booking rates. Consider dedicated tools to scale from good to great.</span></div>';
+  }else{
+    weakAreas.slice(0,4).forEach(w=>{
+      recsHTML+=`<div class="rec-item"><span class="rec-icon">+</span><span>${recTexts[w.idx]}</span></div>`;
+    });
+  }
+  recsEl.innerHTML=recsHTML;
+
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// Email gate
+document.getElementById('gateBtn').addEventListener('click',()=>{
+  const email=document.getElementById('gateEmail').value;
+  if(email&&email.includes('@')){
+    document.querySelector('.gate').innerHTML='<h3 style="color:var(--neon)">Playbook sent.</h3><p style="color:var(--g4)">Check your inbox. If you do not see it in 5 minutes, check spam.</p>';
+  }
+});
+</script>
+</body>
+</html>

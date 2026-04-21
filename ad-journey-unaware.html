@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PodPitch Ad Journey — Unaware Traffic (Problem Aware)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--orange:#FF5924;--orange-h:#e84d1e;--neon:#e7ff5a;--neon-dim:rgba(231,255,90,.1);
+--dark:#222b27;--dark-s:#2a3530;--wh:#fff;--off:#f9fafb;
+--g3:#d1d5db;--g4:#9ca3af;--g5:#6b7280;--g6:#4b5563;
+--red:#ef4444;--green:#22c55e;--amber:#f59e0b;--blue:#3b82f6;
+--f:'Outfit',system-ui,sans-serif;
+}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;font-size:18px}
+body{font-family:var(--f);color:var(--dark);line-height:1.6;background:var(--off);overflow-x:hidden}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+.rv{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease}
+.rv.on{opacity:1;transform:none}
+.d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}
+
+/* Header */
+.hdr{background:var(--dark);padding:48px 0 56px;text-align:center}
+.hdr .badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:100px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);font-size:.7rem;font-weight:600;color:var(--red);margin-bottom:16px;letter-spacing:.03em}
+.hdr h1{font-size:clamp(1.6rem,3.5vw,2.2rem);font-weight:800;color:var(--wh);letter-spacing:-.03em;line-height:1.1;margin-bottom:10px}
+.hdr p{font-size:.95rem;color:var(--g4);max-width:600px;margin:0 auto;line-height:1.6}
+
+/* Awareness Comparison */
+.awareness{padding:40px 0 20px}
+.aw-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:32px}
+@media(max-width:768px){.aw-grid{grid-template-columns:1fr}}
+.aw-card{padding:24px;border-radius:10px;border:1px solid #e5e7eb;background:var(--wh)}
+.aw-card h3{font-size:.82rem;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.aw-dot{width:10px;height:10px;border-radius:50%}
+.aw-dot.aware{background:var(--blue)}.aw-dot.unaware{background:var(--red)}
+.aw-card p{font-size:.82rem;color:var(--g5);line-height:1.6;margin:0}
+.aw-card .buyer{font-size:.75rem;color:var(--g4);margin-top:8px;font-style:italic}
+
+/* Journey */
+.journey{padding:32px 0 64px}
+.flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;gap:0;align-items:start}
+@media(max-width:1000px){.flow{grid-template-columns:1fr;gap:24px}}
+.arrow{display:flex;align-items:center;justify-content:center;padding-top:160px;color:var(--g3);font-size:1.4rem}
+@media(max-width:1000px){.arrow{padding-top:0;transform:rotate(90deg)}}
+
+/* Step */
+.step{background:var(--wh);border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;transition:box-shadow .2s}
+.step:hover{box-shadow:0 8px 32px rgba(0,0,0,.05)}
+.step-header{padding:12px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #e5e7eb}
+.step-num{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g5)}
+.step-tag{font-size:.62rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:4px}
+.tag-unaware{background:rgba(239,68,68,.08);color:var(--red)}
+.tag-problem{background:rgba(245,158,11,.08);color:var(--amber)}
+.tag-solution{background:rgba(59,130,246,.08);color:var(--blue)}
+.tag-product{background:rgba(34,197,94,.08);color:var(--green)}
+.temp-bar{height:4px;width:100%}
+.temp-un{background:linear-gradient(90deg,#ef4444,#f87171)}
+.temp-pr{background:linear-gradient(90deg,#f59e0b,#fbbf24)}
+.temp-so{background:linear-gradient(90deg,#3b82f6,#60a5fa)}
+.temp-pd{background:linear-gradient(90deg,#22c55e,#4ade80)}
+.step-body{padding:18px}
+
+/* Ad Mock */
+.ad-mock{border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;background:var(--wh)}
+.ad-top{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid #f3f4f6}
+.ad-av{width:28px;height:28px;border-radius:50%;background:var(--dark);display:flex;align-items:center;justify-content:center;font-size:.55rem;color:var(--neon);font-weight:800}
+.ad-name{font-size:.7rem;font-weight:600}.ad-sp{font-size:.6rem;color:var(--g4)}
+.ad-img{width:100%;aspect-ratio:1.91/1;background:var(--dark);display:flex;align-items:center;justify-content:center;padding:16px;position:relative}
+.ad-img::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 40%,rgba(231,255,90,.05),transparent 55%)}
+.ad-hl{font-size:.85rem;font-weight:700;color:var(--wh);text-align:center;line-height:1.25;position:relative;z-index:1}
+.ad-hl em{color:var(--neon);font-style:normal}
+.ad-bt{padding:10px 12px;display:flex;align-items:center;justify-content:space-between}
+.ad-url{font-size:.6rem;color:var(--g4)}
+.ad-cta{font-size:.65rem;font-weight:700;color:var(--orange);padding:4px 10px;border:1.5px solid var(--orange);border-radius:4px}
+
+/* LP Mini Mock */
+.lp-mini{border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;background:var(--wh)}
+.lp-bar{display:flex;gap:4px;padding:6px 10px;background:#f8f9fa;border-bottom:1px solid #e5e7eb}
+.lp-d{width:6px;height:6px;border-radius:50%;background:#e5e7eb}
+.lp-url{margin-left:6px;font-size:.5rem;color:var(--g4)}
+.lp-body{padding:14px}
+.lp-h{font-size:.72rem;font-weight:800;color:var(--dark);line-height:1.2;margin-bottom:6px}
+.lp-h em{color:var(--orange);font-style:normal}
+.lp-p{font-size:.58rem;color:var(--g5);line-height:1.5;margin-bottom:8px}
+.lp-btn-s{display:inline-block;font-size:.5rem;padding:4px 8px;background:var(--orange);color:var(--wh);border-radius:3px;font-weight:700}
+.lp-ghost-s{display:inline-block;font-size:.5rem;padding:4px 8px;border:1px solid var(--g3);color:var(--g5);border-radius:3px;font-weight:600;margin-left:4px}
+.lp-sections{margin-top:8px;display:flex;flex-direction:column;gap:4px}
+.lp-sec{height:16px;border-radius:3px;background:var(--off);border:1px dashed #e5e7eb;font-size:.42rem;color:var(--g4);display:flex;align-items:center;padding:0 6px;font-weight:500}
+
+/* Nurture Mock */
+.nur-mock{display:flex;flex-direction:column;gap:8px}
+.nur-email{padding:12px;border-radius:8px;background:var(--off);border:1px solid #e5e7eb}
+.nur-from{font-size:.55rem;color:var(--g4);margin-bottom:3px}
+.nur-subj{font-size:.68rem;font-weight:700;color:var(--dark);margin-bottom:4px}
+.nur-body{font-size:.6rem;color:var(--g5);line-height:1.5}
+.nur-day{font-size:.55rem;font-weight:600;color:var(--orange);margin-bottom:6px}
+
+/* Annotations */
+.ann{display:flex;gap:8px;align-items:flex-start;font-size:.75rem;color:var(--g6);line-height:1.5;margin-top:6px}
+.ann-ic{min-width:16px;height:16px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:.55rem;font-weight:800}
+.ann-p{background:rgba(34,197,94,.1);color:var(--green)}
+.annotations{margin-top:14px;display:flex;flex-direction:column;gap:6px}
+
+/* Key Difference */
+.diff{padding:48px 0;background:var(--dark)}
+.diff-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:768px){.diff-grid{grid-template-columns:1fr}}
+.diff-card{padding:22px;border-radius:10px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03)}
+.diff-label{font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.diff-label.aware{color:var(--blue)}.diff-label.unaware{color:var(--red)}
+.diff-title{font-size:.88rem;font-weight:700;color:var(--wh);margin-bottom:5px}
+.diff-desc{font-size:.75rem;color:var(--g4);line-height:1.6}
+
+/* Footer */
+footer{padding:20px 0;text-align:center;background:var(--off);border-top:1px solid #e5e7eb}
+footer p{font-size:.68rem;color:var(--g4)}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hdr"><div class="wrap">
+<div class="badge rv">Unaware Traffic Journey</div>
+<h1 class="rv d1">PodPitch PR Agency Acquisition: Problem Aware Path</h1>
+<p class="rv d2">This prospect doesn't know podcast PR tools exist. They know they're drowning in manual outreach. The journey educates first, converts second. Four steps instead of three.</p>
+</div></div>
+
+<!-- AWARENESS COMPARISON -->
+<section class="awareness"><div class="wrap">
+<div class="aw-grid rv">
+<div class="aw-card">
+<h3><span class="aw-dot aware"></span> Aware Journey (Solution Aware)</h3>
+<p>Prospect already knows they need a podcast PR tool. They're comparing PodPitch vs Kitcaster vs manual. The ad goes straight to the product landing page.</p>
+<div class="buyer">Buyer mindset: "Which tool is best?"</div>
+</div>
+<div class="aw-card" style="border-color:var(--red);border-width:2px">
+<h3><span class="aw-dot unaware"></span> Unaware Journey (Problem Aware) — THIS PAGE</h3>
+<p>Prospect knows they're spending too much time on podcast outreach. They don't know a tool exists to fix it. The ad leads with the PROBLEM, not the product. Conversion happens through education, not a demo CTA.</p>
+<div class="buyer">Buyer mindset: "There has to be a better way."</div>
+</div>
+</div>
+</div></section>
+
+<!-- JOURNEY: 4 STEPS -->
+<section class="journey"><div class="wrap">
+<div class="flow">
+
+<!-- ═══ STEP 1: PROBLEM-AWARE AD ═══ -->
+<div class="rv">
+<div class="step">
+<div class="step-header"><span class="step-num">Step 1: The Ad</span><span class="step-tag tag-unaware">Problem Aware</span></div>
+<div class="temp-bar temp-un"></div>
+<div class="step-body">
+<div class="ad-mock">
+<div class="ad-top"><div class="ad-av">PP</div><div><div class="ad-name">PodPitch</div><div class="ad-sp">Sponsored</div></div></div>
+<div class="ad-img">
+<div class="ad-hl">Your team sent <em>200 podcast pitches</em> last month.<br><br>How many bookings did you get?<br><br><span style="font-size:.7rem;color:var(--g4)">Take the free scorecard. 2 minutes.</span></div>
+</div>
+<div class="ad-bt"><div class="ad-url">podpitch.com/scorecard</div><div class="ad-cta">Take Quiz</div></div>
+</div>
+<div class="annotations">
+<div class="ann"><span class="ann-ic ann-p">+</span><strong>Hook:</strong> BNP #2 language ("200 pitches, how many bookings?")</div>
+<div class="ann"><span class="ann-ic ann-p">+</span><strong>No product mention:</strong> Does NOT say "PodPitch." Leads with the PROBLEM.</div>
+<div class="ann"><span class="ann-ic ann-p">+</span><strong>Low-commitment CTA:</strong> "Take Quiz" not "Book Demo." Matches awareness level.</div>
+<div class="ann"><span class="ann-ic ann-p">+</span><strong>Education-first:</strong> Offers a scorecard, not a sales page. Earns the right to sell later.</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="arrow rv d1">&#8594;</div>
+
+<!-- ═══ STEP 2: PVP SCORECARD ═══ -->
+<div class="rv d1">
+<div class="step">
+<div class="step-header"><span class="step-num">Step 2: The PvP (Lead Magnet)</span><span class="step-tag tag-problem">Becoming Aware</span></div>
+<div class="temp-bar temp-pr"></div>
+<div class="step-body">
+<div class="lp-mini">
+<div class="lp-bar"><div class="lp-d"></div><div class="lp-d"></div><div class="lp-d"></div><span class="lp-url">podpitch.com/scorecard</span></div>
+<div class="lp-body">
+<div class="lp-h">Podcast Pitch <em>Readiness Scorecard</em></div>
+<div class="lp-p">Rate your client's podcast-readiness in 2 minutes. Get a score, breakdown, and specific recommendations.</div>
+<div class="lp-btn-s">Start Scorecard</div>
+<div class="lp-sections" style="margin-top:10px">
+<div class="lp-sec">8 questions across 8 categories</div>
+<div class="lp-sec">Score out of 32 with verdict</div>
+<div class="lp-sec">Category breakdown (Strong/OK/Weak)</div>
+<div class="lp-sec">Specific recommendations per weakness</div>
+<div class="lp-sec">Email gate: "Get the full Playbook"</div>
+</div>
+</div>
+</div>
+<div class="annotations">
+<div class="ann"><span class="ann-ic ann-p">+</span><strong>No selling:</strong> Pure value. Diagnose before you prescribe.</div>
+<div class="ann"><span class="ann-ic ann-p">+</span><strong>Email capture:</strong> Gate the detailed playbook, not the score. They see value BEFORE giving email.</div>
+<div class="ann"><span class="ann-ic ann-p">+</span><strong>Qualification:</strong> Score reveals their pain level. Low scorers = high-intent prospects.</div>
+<div class="ann"><span class="ann-ic ann-p">+</span><strong>Brand exposure:</strong> PodPitch branding throughout. They learn the name through the tool, not an ad.</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="arrow rv d2">&#8594;</div>
+
+<!-- ═══ STEP 3: NURTURE SEQUENCE ═══ -->
+<div class="rv d2">
+<div class="step">
+<div class="step-header"><span class="step-num">Step 3: Klaviyo Nurture</span><span class="step-tag tag-solution">Solution Aware</span></div>
+<div class="temp-bar temp-so"></div>
+<div class="step-body">
+<div class="nur-mock">
+<div class="nur-email">
+<div class="nur-day">Email 1 — Immediate</div>
+<div class="nur-subj">Your scorecard results + the Podcast PR Playbook</div>
+<div class="nur-body">Here is your score breakdown and the full playbook we promised. Inside: media list templates, pitch frameworks, and the benchmarks agencies use to measure booking rates.</div>
+</div>
+<div class="nur-email">
+<div class="nur-day">Email 2 — Day 3</div>
+<div class="nur-subj">The 23% reply rate secret</div>
+<div class="nur-body">Most podcast pitches get a 5% reply rate. Agencies on PodPitch average 23%. Here is what is different about the pitches: they are written in each client's voice, sent from their real email, and personalised to the host's recent episodes.</div>
+</div>
+<div class="nur-email">
+<div class="nur-day">Email 3 — Day 7</div>
+<div class="nur-subj">How Sarah PR books 8x more podcasts for clients</div>
+<div class="nur-body">Sarah Spiegel runs a PR agency. She used to spend 8 hours per client per week on podcast outreach. Now she spends 30 minutes. Here is a 2-minute video of her dashboard.</div>
+</div>
+<div class="nur-email">
+<div class="nur-day">Email 4 — Day 10</div>
+<div class="nur-subj">See the agency dashboard (15 min, no commitment)</div>
+<div class="nur-body">If your scorecard showed gaps in pitch method, media knowledge, or time efficiency, this is the fix. On a 15-minute call I will walk you through how agencies manage 20+ clients from one workspace. You keep the playbook either way.</div>
+</div>
+</div>
+<div class="annotations">
+<div class="ann"><span class="ann-ic ann-p">+</span><strong>Educate then convert:</strong> 3 value emails before the demo ask</div>
+<div class="ann"><span class="ann-ic ann-p">+</span><strong>Segmented by score:</strong> Low scorers get the "fix your foundation" track. High scorers get the "scale with PodPitch" track.</div>
+<div class="ann"><span class="ann-ic ann-p">+</span><strong>CTA at Day 10 only:</strong> Demo ask comes after they've seen value, not before.</div>
+<div class="ann"><span class="ann-ic ann-p">+</span><strong>Objection handling:</strong> Email 3 uses a case study. Email 4 sells the call.</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="arrow rv d3">&#8594;</div>
+
+<!-- ═══ STEP 4: DEMO + CLOSE ═══ -->
+<div class="rv d3">
+<div class="step">
+<div class="step-header"><span class="step-num">Step 4: Demo</span><span class="step-tag tag-product">Product Aware</span></div>
+<div class="temp-bar temp-pd"></div>
+<div class="step-body">
+<div class="lp-mini">
+<div class="lp-bar"><div class="lp-d"></div><div class="lp-d"></div><div class="lp-d"></div><span class="lp-url">podpitch.com/agencies</span></div>
+<div class="lp-body">
+<div class="lp-h">Your agency demo is booked.</div>
+<div class="lp-p" style="font-size:.62rem">Here is what happens on the call:</div>
+<div class="lp-sections">
+<div class="lp-sec">1. Dashboard walkthrough (multi-client workspace)</div>
+<div class="lp-sec">2. Live AI pitch demo (write in client's voice)</div>
+<div class="lp-sec">3. Your pricing (volume for agencies)</div>
+</div>
+<div style="margin-top:8px">
+<div class="lp-p" style="font-size:.55rem;color:var(--g4)">Pre-call email with 2-min video + agency testimonials</div>
+</div>
+</div>
+</div>
+<div class="annotations">
+<div class="ann"><span class="ann-ic ann-p">+</span><strong>Now they're warm:</strong> They took the scorecard, read the playbook, saw the case study. Demo is earned.</div>
+<div class="ann"><span class="ann-ic ann-p">+</span><strong>Same landing page:</strong> Agency-specific page from the Aware journey. They arrive educated.</div>
+<div class="ann"><span class="ann-ic ann-p">+</span><strong>Higher close rate:</strong> Pre-educated prospects close at 2 to 3x the rate of cold demo requests.</div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</div></section>
+
+<!-- KEY DIFFERENCES -->
+<section class="diff"><div class="wrap">
+<div style="text-align:center;margin-bottom:28px">
+<div class="rv" style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--neon);margin-bottom:8px">Two Journeys Compared</div>
+<div class="rv d1" style="font-size:1.15rem;font-weight:700;color:var(--wh)">Same product. Different buyer mindset. Different path.</div>
+</div>
+<div class="diff-grid">
+<div class="diff-card rv">
+<div class="diff-label aware">Aware Journey (3 Steps)</div>
+<div class="diff-title">Ad goes to product landing page. Demo CTA immediately.</div>
+<div class="diff-desc">Buyer already knows they need a podcast PR tool. They're comparing options. Send them to the agency page with comparison table and demo booking. Close fast.</div>
+</div>
+<div class="diff-card rv d1">
+<div class="diff-label unaware">Unaware Journey (4 Steps)</div>
+<div class="diff-title">Ad goes to free scorecard. Nurture educates. Demo at Day 10.</div>
+<div class="diff-desc">Buyer knows they're drowning in manual work but doesn't know a tool exists. Lead with the problem. Educate with the scorecard and playbook. Earn the demo through value. Close rate is higher because the prospect is pre-educated.</div>
+</div>
+</div>
+<div style="text-align:center;margin-top:24px">
+<div class="rv d2" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:500px;margin:0 auto">
+<div style="text-align:center"><div style="font-size:1.2rem;font-weight:800;color:var(--red)">Unaware</div><div style="font-size:.65rem;color:var(--g4)">Knows the pain</div></div>
+<div style="text-align:center"><div style="font-size:1.2rem;font-weight:800;color:var(--amber)">Problem</div><div style="font-size:.65rem;color:var(--g4)">Scorecard diagnoses</div></div>
+<div style="text-align:center"><div style="font-size:1.2rem;font-weight:800;color:var(--blue)">Solution</div><div style="font-size:.65rem;color:var(--g4)">Nurture educates</div></div>
+<div style="text-align:center"><div style="font-size:1.2rem;font-weight:800;color:var(--green)">Product</div><div style="font-size:.65rem;color:var(--g4)">Demo closes</div></div>
+</div>
+</div>
+</div></section>
+
+<!-- FOOTER -->
+<footer>
+<p>Ad journey concept by MDB Growth Capital | PodPitch PR Agency Unaware Acquisition Path</p>
+</footer>
+
+<script>
+const o=new IntersectionObserver(e=>{e.forEach(i=>{if(i.isIntersecting){i.target.classList.add('on');o.unobserve(i.target)}})},{threshold:.08,rootMargin:'0px 0px -20px 0px'});
+document.querySelectorAll('.rv').forEach(el=>o.observe(el));
+</script>
+</body>
+</html>
